@@ -101,11 +101,8 @@ namespace WebApplication.Services
             }
 
             // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
-
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
+            if (!string.IsNullOrWhiteSpace(userParam.FullName))
+                user.FullName = userParam.FullName;
 
             // update password if provided
             if (!string.IsNullOrWhiteSpace(password))

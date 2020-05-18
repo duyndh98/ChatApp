@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class AuthenticateModel
+    public class RegisterUserModel
     {
         [Required]
         public string Username { get; set; }
+
+        [Required]
+        public string FullName { get; set; }
 
         [Required]
         public string Password { get; set; }

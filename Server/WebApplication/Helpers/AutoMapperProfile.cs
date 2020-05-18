@@ -12,9 +12,9 @@ namespace WebApplication.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserModel>();
-            CreateMap<RegisterModel, User>();
-            CreateMap<UpdateModel, User>();
+            CreateMap<User, ViewUserModel>();
+            CreateMap<RegisterUserModel, User>();
+            CreateMap<UpdateUserModel, User>();
         }
     }
 }

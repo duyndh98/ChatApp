@@ -39,7 +39,7 @@ namespace WebApplication.Controllers
 
         [AllowAnonymous]
         [HttpPost("Authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public IActionResult Authenticate([FromBody]AuthenticateUserModel model)
         {
             var user = _userService.Authenticate(model.Username, model.Password);
 
@@ -65,15 +65,14 @@ namespace WebApplication.Controllers
             {
                 Id = user.Id,
                 Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FullName = user.FullName,
                 Token = tokenString
             });
         }
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public IActionResult Register([FromBody]RegisterUserModel model)
         {
             // map model to entity
             var user = _mapper.Map<User>(model);
@@ -95,7 +94,7 @@ namespace WebApplication.Controllers
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
-            var model = _mapper.Map<IList<UserModel>>(users);
+            var model = _mapper.Map<IList<ViewUserModel>>(users);
             return Ok(model);
         }
 
@@ -103,12 +102,12 @@ namespace WebApplication.Controllers
         public IActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
-            var model = _mapper.Map<UserModel>(user);
+            var model = _mapper.Map<ViewUserModel>(user);
             return Ok(model);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        public IActionResult Update(int id, [FromBody]UpdateUserModel model)
         {
             // map model to entity and set id
             var user = _mapper.Map<User>(model);

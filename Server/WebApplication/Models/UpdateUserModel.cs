@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class UpdateModel
+    public class UpdateUserModel
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
         public string Username { get; set; }
+        public string FullName { get; set; }
         public string Password { get; set; }
     }
 }
