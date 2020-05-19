@@ -10,7 +10,7 @@ using WebApplication.Data;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(WebApplicationContext))]
-    [Migration("20200518174142_Initial")]
+    [Migration("20200519145331_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace WebApplication.Migrations
 
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");

@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 using AutoMapper;
 using Microsoft.OpenApi.Models;
+using WebApplication.Entities;
 
 namespace WebApplication
 {

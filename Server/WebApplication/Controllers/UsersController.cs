@@ -90,6 +90,7 @@ namespace WebApplication.Controllers
             }
         }
 
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult GetAll()
         {

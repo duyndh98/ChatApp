@@ -16,7 +16,8 @@ namespace WebApplication.Migrations
                     Username = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
-                    PasswordSalt = table.Column<byte[]>(nullable: true)
+                    PasswordSalt = table.Column<byte[]>(nullable: true),
+                    Role = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
