@@ -14,7 +14,8 @@ namespace WebApplication.Helpers
         {
             CreateMap<User, ViewUserModel>();
             CreateMap<RegisterUserModel, User>();
-            CreateMap<UpdateUserModel, User>();
+            CreateMap<UpdateUserInfoModel, User>();
+            CreateMap<UpdateUserRoleModel, User>();
         }
     }
 }

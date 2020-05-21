@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebApplication.Data;
 using WebApplication.Entities;
 using WebApplication.Helpers;
+using System.Linq;
 
 namespace WebApplication.Services
 {
@@ -20,7 +21,7 @@ namespace WebApplication.Services
         IEnumerable<User> GetAll();
         User GetById(int id);
         User Create(User user, string password);
-        void Update(User user, string password = null);
+        void Update(User user, string password);
         void Delete(int id);
     }
 
@@ -83,7 +84,7 @@ namespace WebApplication.Services
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(User userParam, string password)
         {
             var user = _context.Users.Find(userParam.Id);
 
@@ -112,6 +113,15 @@ namespace WebApplication.Services
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
+            }
+
+            // update user role if provided
+            if (!string.IsNullOrWhiteSpace(userParam.Role))
+            {
+                if (!Role.AvailableRoles.Contains(userParam.Role))
+                    throw new Exception("Role is not supported");
+
+                user.Role = userParam.Role;
             }
 
             _context.Users.Update(user);

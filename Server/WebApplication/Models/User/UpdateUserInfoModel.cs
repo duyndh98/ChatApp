@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class UpdateUserModel
+    public class UpdateUserInfoModel
     {
         public string Username { get; set; }
         public string FullName { get; set; }
