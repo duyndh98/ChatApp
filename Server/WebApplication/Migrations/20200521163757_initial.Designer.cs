@@ -10,14 +10,14 @@ using WebApplication.Data;
 namespace WebApplication.Migrations
 {
     [DbContext(typeof(WebApplicationContext))]
-    [Migration("20200519145331_Initial")]
-    partial class Initial
+    [Migration("20200521163757_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
