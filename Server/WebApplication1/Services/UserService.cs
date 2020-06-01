@@ -28,20 +28,24 @@ namespace WebApplication1.Services
 
         public User Authenticate(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
+            // Validate
+            if (string.IsNullOrEmpty(username))
+                throw new Exception("UserName is required");
 
-            var user = _context.Users.SingleOrDefault(x => x.Username == username);
+            if (string.IsNullOrEmpty(password))
+                throw new Exception("Password is required");
 
-            // check if username exists
+            // Find
+            var user = _context.Users.SingleOrDefault(x => x.UserName == username);
+            // Not found
             if (user == null)
-                return null;
+                throw new Exception("User not found");
 
-            // check if password is correct
+            // Password is correct
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
+                throw new Exception("UserName or password is incorrect");
 
-            // authentication successful
+            // Ok
             return user;
         }
 
@@ -52,90 +56,107 @@ namespace WebApplication1.Services
 
         public User GetById(int id)
         {
-            return _context.Users.Find(id);
+            var user = _context.Users.Find(id);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return user;
         }
 
         public User Create(User user, string password)
         {
-            // validation
-            if (string.IsNullOrWhiteSpace(password))
+            // Validate
+            if (string.IsNullOrEmpty(user.UserName))
+                throw new Exception("UserName is required");
+
+            if (string.IsNullOrEmpty(password))
                 throw new Exception("Password is required");
 
-            if (_context.Users.Any(x => x.Username == user.Username))
-                throw new Exception("Username \"" + user.Username + "\" is already taken");
+            // UserName is already taken
+            if (_context.Users.Any(x => x.UserName == user.UserName))
+                throw new Exception("Username \"" + user.UserName + "\" is already taken");
 
+            // Hash password
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
+            // Add
             _context.Users.Add(user);
             _context.SaveChanges();
-
+            
+            // Ok
             return user;
         }
 
-        public void Update(User userParam, string password)
+        public void Update(User user, string password)
         {
-            var user = _context.Users.Find(userParam.Id);
-
-            if (user == null)
+            // Find
+            var updatedUser = _context.Users.Find(user.Id);   
+            if (updatedUser == null)
                 throw new Exception("User not found");
 
-            // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
+            // Update UserName
+            if (!string.IsNullOrEmpty(user.UserName))
             {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
-                    throw new Exception("Username " + userParam.Username + " is already taken");
+                // UserName is already taken
+                if (_context.Users.Any(x => x.UserName == user.UserName))
+                    throw new Exception("Username is already taken");
 
-                user.Username = userParam.Username;
+                updatedUser.UserName = user.UserName;
             }
 
-            // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FullName))
-                user.FullName = userParam.FullName;
+            // Update FullName
+            if (!string.IsNullOrEmpty(user.FullName))
+                updatedUser.FullName = user.FullName;
 
-            // update password if provided
-            if (!string.IsNullOrWhiteSpace(password))
+            // Update Password
+            if (!string.IsNullOrEmpty(password))
             {
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
+                if (updatedUser.PasswordHash == passwordHash && updatedUser.PasswordSalt == passwordSalt)
+                    throw new Exception("Password is the same as yours");
+
+                updatedUser.PasswordHash = passwordHash;
+                updatedUser.PasswordSalt = passwordSalt;
             }
 
-            // update user role if provided
-            if (!string.IsNullOrWhiteSpace(userParam.Role))
+            // Update Role
+            if (!string.IsNullOrEmpty(user.Role))
             {
-                if (!Role.AvailableRoles.Contains(userParam.Role))
+                if (!Role.AvailableRoles.Contains(user.Role))
                     throw new Exception("Role is not supported");
 
-                user.Role = userParam.Role;
+                updatedUser.Role = user.Role;
             }
 
-            _context.Users.Update(user);
+            // Update
+            _context.Users.Update(updatedUser);
             _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
+            // Find
             var user = _context.Users.Find(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-            }
+            if (user == null)
+                throw new Exception("User not found");
+
+            // Delete
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
 
-        // private helper methods
+        // Helper methods
 
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (string.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
@@ -147,7 +168,7 @@ namespace WebApplication1.Services
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (string.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
             if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
             if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
 

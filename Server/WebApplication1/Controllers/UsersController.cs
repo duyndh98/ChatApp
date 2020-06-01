@@ -47,9 +47,6 @@ namespace WebApplication1.Controllers
             {
                 var user = _userService.Authenticate(model.Username, model.Password);
 
-                if (user == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
-
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -65,11 +62,11 @@ namespace WebApplication1.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
 
-                // return basic user info and authentication token
+                // Return basic user info and authentication token
                 return Ok(new
                 {
                     Id = user.Id,
-                    Username = user.Username,
+                    Username = user.UserName,
                     FullName = user.FullName,
                     Role = user.Role,
                     Token = tokenString
@@ -77,7 +74,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
@@ -88,23 +85,25 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                // map model to entity
+                // Map model to entity
                 var user = _mapper.Map<User>(model);
+                
+                // Default role is user
+                user.Role = Role.User;
 
-                // create user
+                // Create
                 _userService.Create(user, model.Password);
                 return Ok();
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
 
-        [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetUsers()
         {
             try
             {
@@ -114,13 +113,13 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetUser(int id)
         {
             try
             {
@@ -130,55 +129,55 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
 
-        [HttpPut("Info{id}")]
-        public IActionResult UpdateInfo(int id, [FromBody]UserInfoUpdateModel model)
+        [HttpPut("{id}")]
+        public IActionResult PutUserInfo(int id, [FromBody]UserInfoUpdateModel model)
         {
             try
             {
-                // map model to entity and set id
+                // Map model to entity and set id
                 var user = _mapper.Map<User>(model);
                 user.Id = id;
 
-                // update user 
+                // Update 
                 _userService.Update(user, model.Password);
                 return Ok();
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
 
         [Authorize(Roles = Role.Admin)]
         [HttpPut("Grant/{id}")]
-        public IActionResult UpdateRole(int id, [FromBody]UserRoleUpdateModel model)
+        public IActionResult PutUserRole(int id, [FromBody]UserRoleUpdateModel model)
         {
             try
             {
-                // map model to entity and set id
+                // Map model to entity and set id
                 var user = _mapper.Map<User>(model);
                 user.Id = id;
 
-                // update user 
+                // Update 
                 _userService.Update(user, null);
                 return Ok();
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
 
         [Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteUser(int id)
         {
             try
             {
@@ -187,7 +186,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }

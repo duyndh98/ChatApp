@@ -23,7 +23,7 @@ namespace WebApplication1.Helpers
             UserService.CreatePasswordHash("admin@pw", out passwordHash, out passwordSalt);
             context.Users.Add(new User
             {
-                Username = "admin",
+                UserName = "admin",
                 FullName = "Administrator",
                 Role = Role.Admin,
                 PasswordHash = passwordHash,
@@ -34,7 +34,7 @@ namespace WebApplication1.Helpers
             UserService.CreatePasswordHash("guest@pw", out passwordHash, out passwordSalt);
             context.Users.Add(new User
             {
-                Username = "guest",
+                UserName = "guest",
                 FullName = "Guest",
                 Role = Role.User,
                 PasswordHash = passwordHash,
