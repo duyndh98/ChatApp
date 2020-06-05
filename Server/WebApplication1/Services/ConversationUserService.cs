@@ -12,7 +12,7 @@ namespace WebApplication1.Services
         IEnumerable<ConversationUser> GetAll();
         ConversationUser GetById(int id);
         ConversationUser Create(ConversationUser conversationUser);
-        void Update(ConversationUser conversationUser);
+        //void Update(ConversationUser conversationUser);
         void Delete(int id);
     }
 
@@ -49,17 +49,17 @@ namespace WebApplication1.Services
             return conversationUser;
         }
 
-        public void Update(ConversationUser conversationUser)
-        {
-            // Find
-            var updatedConversation = _context.ConversationUsers.Find(conversationUser.Id);
-            if (updatedConversation == null)
-                throw new Exception("ConversationUser not found");
+        //public void Update(ConversationUser conversationUser)
+        //{
+        //    // Find
+        //    var updatedConversation = _context.ConversationUsers.Find(conversationUser.Id);
+        //    if (updatedConversation == null)
+        //        throw new Exception("ConversationUser not found");
 
-            // Update
-            _context.ConversationUsers.Update(updatedConversation);
-            _context.SaveChanges();
-        }
+        //    // Update
+        //    _context.ConversationUsers.Update(updatedConversation);
+        //    _context.SaveChanges();
+        //}
 
         public void Delete(int id)
         {

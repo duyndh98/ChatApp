@@ -19,5 +19,7 @@ namespace WebApplication1.Data
         public DbSet<WebApplication1.Entities.Conversation> Conversations { get; set; }
 
         public DbSet<WebApplication1.Entities.ConversationUser> ConversationUsers { get; set; }
+
+        public DbSet<WebApplication1.Entities.Message> Messages { get; set; }
     }
 }

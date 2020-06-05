@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-    public class ConversationModel
+    public class ConversationUpdateModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

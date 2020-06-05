@@ -18,5 +18,6 @@ namespace WebApplication1.Entities
 
         public virtual ICollection<ConversationUser> ConversationUsers { get; set; }
 
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

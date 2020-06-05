@@ -42,7 +42,7 @@ namespace WebApplication1.Controllers
             try
             {
                 var conversations = _conversationUserService.GetAll();
-                var model = _mapper.Map<IList<ConversationUserModel>>(conversations);
+                var model = _mapper.Map<IList<ConversationUserViewModel>>(conversations);
                 return Ok(model);
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace WebApplication1.Controllers
             try
             {
                 var conversation = _conversationUserService.GetById(id);
-                var model = _mapper.Map<ConversationUserModel>(conversation);
+                var model = _mapper.Map<ConversationUserViewModel>(conversation);
                 return Ok(model);
             }
             catch (Exception ex)
@@ -70,29 +70,29 @@ namespace WebApplication1.Controllers
         // PUT: api/ConversationUsers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public IActionResult PutConversationUser(int id, [FromBody]ConversationUserModel model)
-        {
-            try
-            {
-                var conversation = _mapper.Map<ConversationUser>(model);
-                conversation.Id = id;
+        //[HttpPut("{id}")]
+        //public IActionResult PutConversationUser(int id, [FromBody]ConversationUserUpdateModel model)
+        //{
+        //    try
+        //    {
+        //        var conversation = _mapper.Map<ConversationUser>(model);
+        //        conversation.Id = id;
 
-                // Update
-                _conversationUserService.Update(conversation);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+        //        // Update
+        //        _conversationUserService.Update(conversation);
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
 
         // POST: api/ConversationUsers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public IActionResult PostConversationUser([FromBody]ConversationUserModel model)
+        public IActionResult PostConversationUser([FromBody]ConversationUserCreationModel model)
         {
             try
             {

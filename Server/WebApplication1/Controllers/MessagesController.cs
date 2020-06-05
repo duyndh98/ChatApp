@@ -19,30 +19,30 @@ namespace WebApplication1.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ConversationsController : ControllerBase
+    public class MessagesController : ControllerBase
     {
-        private IConversationService _conversationService;
+        private IMessageService _messageService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public ConversationsController(
-              IConversationService conversationService,
+        public MessagesController(
+              IMessageService messageService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
-            _conversationService = conversationService;
+            _messageService = messageService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
-        // GET: api/Conversations
+        // GET: api/Messages
         [HttpGet]
-        public IActionResult GetConversations()
+        public IActionResult GetMessages()
         {
             try
             {
-                var conversations = _conversationService.GetAll();
-                var model = _mapper.Map<IList<ConversationViewModel>>(conversations);
+                var messages = _messageService.GetAll();
+                var model = _mapper.Map<IList<MessageViewModel>>(messages);
                 return Ok(model);
             }
             catch (Exception ex)
@@ -51,14 +51,14 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // GET: api/Conversations/5
+        // GET: api/Messages/5
         [HttpGet("{id}")]
-        public IActionResult GetConversation(int id)
+        public IActionResult GetMessage(int id)
         {
             try
             {
-                var conversation = _conversationService.GetById(id);
-                var model = _mapper.Map<ConversationViewModel>(conversation);
+                var message = _messageService.GetById(id);
+                var model = _mapper.Map<MessageViewModel>(message);
                 return Ok(model);
             }
             catch (Exception ex)
@@ -67,19 +67,19 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // PUT: api/Conversations/5
+        // PUT: api/Messages/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public IActionResult PutConversation(int id, [FromBody]ConversationUpdateModel model)
+        public IActionResult PutMessage(int id, [FromBody]MessageUpdateModel model)
         {
             try
             {
-                var conversation = _mapper.Map<Conversation>(model);
-                conversation.Id = id;
+                var message = _mapper.Map<Message>(model);
+                message.Id = id;
 
                 // Update
-                _conversationService.Update(conversation);
+                _messageService.Update(message);
                 return Ok();
             }
             catch (Exception ex)
@@ -88,19 +88,19 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // POST: api/Conversations
+        // POST: api/Messages
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public IActionResult PostConversation([FromBody]ConversationCreationModel model)
+        public IActionResult PostMessage([FromBody]MessageCreationModel model)
         {
             try
             {
                 // Map model to entity
-                var conversation = _mapper.Map<Conversation>(model);
+                var message = _mapper.Map<Message>(model);
 
                 // Create
-                _conversationService.Create(conversation);
+                _messageService.Create(message);
                 return Ok();
             }
             catch (Exception ex)
@@ -109,13 +109,13 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // DELETE: api/Conversations/5
+        // DELETE: api/Messages/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteConversation(int id)
+        public IActionResult DeleteMessage(int id)
         {
             try
             {
-                _conversationService.Delete(id);
+                _messageService.Delete(id);
                 return Ok();
             }
             catch (Exception ex)
