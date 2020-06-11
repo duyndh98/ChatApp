@@ -17,6 +17,7 @@ using WebApplication1.Entities;
 using WebApplication1.Helpers;
 using WebApplication1.Models;
 using WebApplication1.Services;
+using WebApplication1.Helpers;
 
 namespace WebApplication1.Controllers
 {
@@ -102,6 +103,7 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -134,14 +136,31 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult PutUserInfo(int id, [FromBody]UserInfoUpdateModel model)
+        [HttpGet("Owner")]
+        public IActionResult GetUserOwner()
+        {
+            try
+            {
+                var userId = Auth.GetUserIdFromClaims(this);
+                var user = _userService.GetById(userId);
+                var model = _mapper.Map<UserViewModel>(user);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                // Return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("Owner")]
+        public IActionResult PutUserOwnerInfo([FromBody]UserInfoUpdateModel model)
         {
             try
             {
                 // Map model to entity and set id
                 var user = _mapper.Map<User>(model);
-                user.Id = id;
+                user.Id = Auth.GetUserIdFromClaims(this);
 
                 // Update 
                 _userService.Update(user, model.Password);
