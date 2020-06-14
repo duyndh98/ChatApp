@@ -13,10 +13,15 @@ namespace WebApplication1.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, UserViewModel>();
+            CreateMap<UserAuthenticationModel, User>();
             CreateMap<UserRegistrationModel, User>();
             CreateMap<UserInfoUpdateModel, User>();
             CreateMap<UserRoleUpdateModel, User>();
-            CreateMap<ConversationViewModel, Conversation>();
-            CreateMap<ConversationUserViewModel, ConversationUser>();        }
+            CreateMap<Conversation, ConversationViewModel>();
+            CreateMap<ConversationCreationModel, Conversation>();
+            CreateMap<ConversationUpdateModel, Conversation>();
+            CreateMap<ConversationMemberModel, ConversationUser>();
+            CreateMap<ConversationUser, ConversationMemberModel>();
+        }
     }
 }

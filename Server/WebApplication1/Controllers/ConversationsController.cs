@@ -22,20 +22,24 @@ namespace WebApplication1.Controllers
     public class ConversationsController : ControllerBase
     {
         private IConversationService _conversationService;
+        private IConversationUserService _conversationUserService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public ConversationsController(
               IConversationService conversationService,
+              IConversationUserService conversationUserService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _conversationService = conversationService;
+            _conversationUserService = conversationUserService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
         // GET: api/Conversations
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult GetConversations()
         {
@@ -68,8 +72,6 @@ namespace WebApplication1.Controllers
         }
 
         // PUT: api/Conversations/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public IActionResult PutConversation(int id, [FromBody]ConversationUpdateModel model)
         {
@@ -89,8 +91,6 @@ namespace WebApplication1.Controllers
         }
 
         // POST: api/Conversations
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public IActionResult PostConversation([FromBody]ConversationCreationModel model)
         {
@@ -110,6 +110,7 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE: api/Conversations/5
+        [Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult DeleteConversation(int id)
         {
@@ -117,6 +118,56 @@ namespace WebApplication1.Controllers
             {
                 _conversationService.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("Members")]
+        public IActionResult PostMember([FromBody]ConversationMemberModel model)
+        {
+            try
+            {
+                // Map model to entity
+                var member = _mapper.Map<ConversationUser>(model);
+
+                // Create
+                _conversationUserService.Create(member);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Members")]
+        public IActionResult DeleteMember([FromBody]ConversationMemberModel model)
+        {
+            try
+            {
+                // Map model to entity
+                var member = _mapper.Map<ConversationUser>(model);
+
+                _conversationUserService.Delete(member);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("Members")]
+        public IActionResult GetMembers(int id)
+        {
+            try
+            {
+                var members = _conversationUserService.GetMembers(id);
+                var model = _mapper.Map<IList<ConversationMemberModel>>(members);
+                return Ok(model);
             }
             catch (Exception ex)
             {

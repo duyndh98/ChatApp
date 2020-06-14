@@ -41,7 +41,7 @@ namespace WebApplication1.Services
 
         public Conversation Create(Conversation conversation)
         {
-            // Validate
+            // Check
             if (string.IsNullOrEmpty(conversation.Name))
                 throw new Exception("Name is required");
 
@@ -60,8 +60,10 @@ namespace WebApplication1.Services
             if (updatedConversation == null)
                 throw new Exception("Conversation not found");
 
-            if (!string.IsNullOrEmpty(conversation.Name))
+            if (string.IsNullOrEmpty(conversation.Name))
                 throw new Exception("Name is required");
+            else
+                updatedConversation.Name = conversation.Name;
 
             // Update
             _context.Conversations.Update(updatedConversation);

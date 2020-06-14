@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-    public class ConversationUserCreationModel
+    public class ConversationMemberModel
     {
-        public int UserId { get; set; }
         public int ConversationId { get; set; }
+        public int UserId { get; set; }
     }
 }

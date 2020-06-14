@@ -23,7 +23,7 @@ namespace WebApplication1
                 try
                 {
                     var context = scope.ServiceProvider.GetRequiredService<WebApplication1Context>();
-                    DbInitializer.Seed(context);
+                    Seeder.Seed(context);
                 }
                 catch (Exception exception)
                 {

@@ -84,6 +84,7 @@ namespace WebApplication1
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConversationService, ConversationService>();
+            services.AddScoped<IConversationUserService, ConversationUserService>();
 
             // Swagger
             services.AddSwaggerDocumentation();

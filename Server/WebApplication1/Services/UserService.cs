@@ -28,20 +28,19 @@ namespace WebApplication1.Services
 
         public User Authenticate(string username, string password)
         {
-            // Validate
+            // Check
             if (string.IsNullOrEmpty(username))
-                throw new Exception("UserName is required");
+                throw new Exception("Username is required");
 
             if (string.IsNullOrEmpty(password))
                 throw new Exception("Password is required");
 
             // Find
             var user = _context.Users.SingleOrDefault(x => x.UserName == username);
-            // Not found
             if (user == null)
                 throw new Exception("User not found");
 
-            // Password is correct
+            // Verify
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 throw new Exception("UserName or password is incorrect");
 

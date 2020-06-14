@@ -41,14 +41,12 @@ namespace WebApplication1.Migrations
                 name: "ConversationUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
                     ConversationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConversationUsers", x => x.Id);
+                    table.PrimaryKey("PK_ConversationUsers", x => new { x.ConversationId, x.UserId });
                     table.ForeignKey(
                         name: "FK_ConversationUsers_Conversations_ConversationId",
                         column: x => x.ConversationId,
@@ -91,11 +89,6 @@ namespace WebApplication1.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConversationUsers_ConversationId",
-                table: "ConversationUsers",
-                column: "ConversationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConversationUsers_UserId",

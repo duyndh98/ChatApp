@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using WebApplication1.Entities;
 
 namespace WebApplication1.Data
@@ -21,5 +21,10 @@ namespace WebApplication1.Data
         public DbSet<WebApplication1.Entities.ConversationUser> ConversationUsers { get; set; }
 
         public DbSet<WebApplication1.Entities.Message> Messages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ConversationUser>().HasKey(x => new { x.ConversationId, x.UserId });
+        }
     }
 }

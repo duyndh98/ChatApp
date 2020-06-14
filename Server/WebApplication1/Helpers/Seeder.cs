@@ -8,7 +8,7 @@ using WebApplication1.Services;
 
 namespace WebApplication1.Helpers
 {
-    public static class DbInitializer
+    public static class Seeder
     {
         public static void Seed(WebApplication1Context context)
         {
@@ -36,6 +36,16 @@ namespace WebApplication1.Helpers
             {
                 UserName = "guest",
                 FullName = "Guest",
+                Role = Role.User,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            });
+
+            UserService.CreatePasswordHash("test@pw", out passwordHash, out passwordSalt);
+            context.Users.Add(new User
+            {
+                UserName = "test",
+                FullName = "Test",
                 Role = Role.User,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt

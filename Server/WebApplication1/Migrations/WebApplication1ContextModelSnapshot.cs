@@ -36,20 +36,13 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Entities.ConversationUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("ConversationId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
+                    b.HasKey("ConversationId", "UserId");
 
                     b.HasIndex("UserId");
 

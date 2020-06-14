@@ -10,10 +10,9 @@ namespace WebApplication1.Services
     public interface IConversationUserService
     {
         IEnumerable<ConversationUser> GetAll();
-        ConversationUser GetById(int id);
         ConversationUser Create(ConversationUser conversationUser);
-        //void Update(ConversationUser conversationUser);
-        void Delete(int id);
+        void Delete(ConversationUser conversationUser);
+        IEnumerable<ConversationUser> GetMembers(int id);
     }
 
     public class ConversationUserService : IConversationUserService
@@ -30,17 +29,19 @@ namespace WebApplication1.Services
             return _context.ConversationUsers;
         }
 
-        public ConversationUser GetById(int id)
-        {
-            var conversationUser = _context.ConversationUsers.Find(id);
-            if (conversationUser == null)
-                throw new Exception("ConversationUser not found");
-
-            return conversationUser;
-        }
-
         public ConversationUser Create(ConversationUser conversationUser)
         {
+            // Check
+            if (!_context.Conversations.Any(x => x.Id == conversationUser.ConversationId))
+                throw new Exception("Conversation not found");
+
+            if (!_context.Users.Any(x => x.Id == conversationUser.UserId))
+                throw new Exception("User not found");
+
+            if (_context.ConversationUsers.Any(
+                x => x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId))
+                throw new Exception("Member already exist");
+
             // Add
             _context.ConversationUsers.Add(conversationUser);
             _context.SaveChanges();
@@ -49,28 +50,26 @@ namespace WebApplication1.Services
             return conversationUser;
         }
 
-        //public void Update(ConversationUser conversationUser)
-        //{
-        //    // Find
-        //    var updatedConversation = _context.ConversationUsers.Find(conversationUser.Id);
-        //    if (updatedConversation == null)
-        //        throw new Exception("ConversationUser not found");
-
-        //    // Update
-        //    _context.ConversationUsers.Update(updatedConversation);
-        //    _context.SaveChanges();
-        //}
-
-        public void Delete(int id)
+        public void Delete(ConversationUser conversationUser)
         {
             // Find
-            var conversationUser = _context.ConversationUsers.Find(id);
-            if (conversationUser == null)
-                throw new Exception("ConversationUser not found");
+            if (!_context.ConversationUsers.Any(
+                x => x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId))
+                throw new Exception("Member not found");
 
             // Delete
             _context.ConversationUsers.Remove(conversationUser);
             _context.SaveChanges();
+        }
+
+        public IEnumerable<ConversationUser> GetMembers(int id)
+        {
+            // Find
+            var conversation = _context.Conversations.Find(id);
+            if (conversation == null)
+                throw new Exception("Conversation not found");
+
+            return _context.ConversationUsers.Where(x => x.ConversationId == id);
         }
     }
 }

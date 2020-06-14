@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace WebApplication1.Entities
 {
     public class ConversationUser
-    {
-        public int Id { get; set; }
-        
+    {        
+        [Key]
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
+        [Key]
         public int ConversationId { get; set; }
         public virtual Conversation Conversation { get; set; }
     }
