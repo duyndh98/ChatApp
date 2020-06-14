@@ -99,6 +99,8 @@ namespace WebApplication1.Controllers
                 // Map model to entity
                 var message = _mapper.Map<Message>(model);
 
+                message.SenderId = Auth.GetUserIdFromClaims(this);
+
                 // Create
                 _messageService.Create(message);
                 return Ok();
@@ -117,6 +119,21 @@ namespace WebApplication1.Controllers
             {
                 _messageService.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("Conversations")]
+        public IActionResult GetMessagesOfConversation(int conversationId)
+        {
+            try
+            {
+                var messages = _messageService.GetMessagesOfConversation(conversationId);
+                var model = _mapper.Map<IList<MessageViewModel>>(messages);
+                return Ok(model);
             }
             catch (Exception ex)
             {

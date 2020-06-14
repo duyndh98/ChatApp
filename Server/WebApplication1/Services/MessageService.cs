@@ -14,6 +14,8 @@ namespace WebApplication1.Services
         Message Create(Message message);
         void Update(Message message);
         void Delete(int id);
+
+        IEnumerable<Message> GetMessagesOfConversation(int conversationId);
     }
 
     public class MessageService : IMessageService
@@ -41,7 +43,17 @@ namespace WebApplication1.Services
 
         public Message Create(Message message)
         {
-            // Validate
+            // Check            
+            if (!_context.Conversations.Any(x => x.Id == message.ConversationId))
+                throw new Exception("Conversation not found");
+
+            if (!_context.Users.Any(x => x.Id == message.SenderId))
+                throw new Exception("User not found");
+
+            if (!_context.ConversationUsers.Any(
+                x => x.ConversationId == message.ConversationId && x.UserId == message.SenderId))
+                throw new Exception("User is not member of the conversation");
+
             if (string.IsNullOrEmpty(message.Content))
                 throw new Exception("Content is required");
 
@@ -80,6 +92,15 @@ namespace WebApplication1.Services
             // Delete
             _context.Messages.Remove(message);
             _context.SaveChanges();
+        }
+
+        public IEnumerable<Message> GetMessagesOfConversation(int conversationId)
+        {
+            // Check
+            if (!_context.Conversations.Any(x => x.Id == conversationId))
+                throw new Exception("Conversation not found");
+
+            return _context.Messages.Where(x => x.ConversationId == conversationId);
         }
     }
 }

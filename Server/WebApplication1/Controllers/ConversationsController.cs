@@ -23,17 +23,20 @@ namespace WebApplication1.Controllers
     {
         private IConversationService _conversationService;
         private IConversationUserService _conversationUserService;
+        private IMessageService _messageService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public ConversationsController(
               IConversationService conversationService,
               IConversationUserService conversationUserService,
+              IMessageService messageService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _conversationService = conversationService;
             _conversationUserService = conversationUserService;
+            _messageService = messageService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }

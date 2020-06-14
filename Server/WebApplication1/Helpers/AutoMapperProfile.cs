@@ -22,6 +22,10 @@ namespace WebApplication1.Helpers
             CreateMap<ConversationUpdateModel, Conversation>();
             CreateMap<ConversationMemberModel, ConversationUser>();
             CreateMap<ConversationUser, ConversationMemberModel>();
+
+            CreateMap<MessageCreationModel, Message>();
+            CreateMap<MessageUpdateModel, Message>();
+            CreateMap<Message, MessageViewModel> ();
         }
     }
 }
