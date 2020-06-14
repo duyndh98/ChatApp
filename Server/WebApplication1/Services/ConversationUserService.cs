@@ -12,7 +12,10 @@ namespace WebApplication1.Services
         IEnumerable<ConversationUser> GetAll();
         ConversationUser Create(ConversationUser conversationUser);
         void Delete(ConversationUser conversationUser);
-        IEnumerable<ConversationUser> GetMembers(int id);
+
+        IEnumerable<ConversationUser> GetMembers(int conversationId);
+
+        IEnumerable<ConversationUser> GetConversations(int userId);
     }
 
     public class ConversationUserService : IConversationUserService
@@ -62,14 +65,24 @@ namespace WebApplication1.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<ConversationUser> GetMembers(int id)
+        public IEnumerable<ConversationUser> GetMembers(int conversationId)
         {
             // Find
-            var conversation = _context.Conversations.Find(id);
+            var conversation = _context.Conversations.Find(conversationId);
             if (conversation == null)
                 throw new Exception("Conversation not found");
 
-            return _context.ConversationUsers.Where(x => x.ConversationId == id);
+            return _context.ConversationUsers.Where(x => x.ConversationId == conversationId);
+        }
+
+        public IEnumerable<ConversationUser> GetConversations(int userId)
+        {
+            // Find
+            var user = _context.Users.Find(userId);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return _context.ConversationUsers.Where(x => x.UserId == userId);
         }
     }
 }

@@ -27,15 +27,18 @@ namespace WebApplication1.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private IConversationUserService _conversationUserService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
               IUserService userService,
+              IConversationUserService conversationUserService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _conversationUserService = conversationUserService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -202,6 +205,22 @@ namespace WebApplication1.Controllers
             {
                 _userService.Delete(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("JoinedConversations")]
+        public IActionResult GetJoinedConversation()
+        {
+            try
+            {
+                var conversations = _conversationUserService.GetConversations(Auth.GetUserIdFromClaims(this));
+                var model = _mapper.Map<IList<ConversationMemberModel>>(conversations);
+                return Ok(model);
             }
             catch (Exception ex)
             {
