@@ -100,7 +100,15 @@ namespace WebApplication1.Controllers
                 var conversation = _mapper.Map<Conversation>(model);
 
                 // Create
-                _conversationService.Create(conversation);
+                var createdConversation = _conversationService.Create(conversation);
+
+                // Add current user as member
+                _conversationUserService.Create(new ConversationUser()
+                {
+                    ConversationId = createdConversation.Id,
+                    UserId = Auth.GetUserIdFromClaims(this)
+                });
+
                 return Ok();
             }
             catch (Exception ex)
