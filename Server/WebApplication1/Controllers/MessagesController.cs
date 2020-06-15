@@ -36,6 +36,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: api/Messages
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult GetMessages()
         {
@@ -126,7 +127,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpGet("Conversations")]
+        [HttpGet("OfConversation")]
         public IActionResult GetMessagesOfConversation(int conversationId)
         {
             try
@@ -134,6 +135,23 @@ namespace WebApplication1.Controllers
                 var messages = _messageService.GetMessagesOfConversation(conversationId);
                 var model = _mapper.Map<IList<MessageViewModel>>(messages);
                 return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("OfConversation/New")]
+        public IActionResult GetNewMessagesOfConversation(int conversationId, long lastTimeSpan)
+        {
+            try
+            {
+                var timeMessages = _messageService.GetNewMessagesOfConversation(conversationId, lastTimeSpan);
+                var time = timeMessages.Item1;
+                var messages = timeMessages.Item2;
+                var mappedMessages = _mapper.Map<IList<MessageViewModel>>(messages);
+                return Ok(new Tuple<long, IList<MessageViewModel>>(time, mappedMessages));
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
 using WebApplication1.Entities;
+using WebApplication1.Helpers;
 
 namespace WebApplication1.Services
 {
@@ -16,6 +17,7 @@ namespace WebApplication1.Services
         void Delete(int id);
 
         IEnumerable<Message> GetMessagesOfConversation(int conversationId);
+        Tuple<long, IEnumerable<Message>> GetNewMessagesOfConversation(int conversationId, long lastTimeSpan);
     }
 
     public class MessageService : IMessageService
@@ -101,6 +103,24 @@ namespace WebApplication1.Services
                 throw new Exception("Conversation not found");
 
             return _context.Messages.Where(x => x.ConversationId == conversationId);
+        }
+
+        public Tuple<long, IEnumerable<Message>> GetNewMessagesOfConversation(int conversationId, long lastTimeSpan)
+        {
+            //var lastTime = Utils.Int64ToDateTime(lastTimeSpan);
+            var messages = GetMessagesOfConversation(conversationId);
+            var filtedMessages = new List<Message>();
+            foreach (var message in messages)
+            {
+                var messageTimeSpan = Utils.DateTimeToInt64(message.ArrivalTime);
+                if (messageTimeSpan > lastTimeSpan)
+                    filtedMessages.Add(message);
+            }
+
+            var lastTime = filtedMessages.Aggregate((x, y) => x.ArrivalTime > y.ArrivalTime ? x : y).ArrivalTime;
+            lastTimeSpan = Utils.DateTimeToInt64(lastTime);
+
+            return new Tuple<long, IEnumerable<Message>>(lastTimeSpan, filtedMessages);
         }
     }
 }
