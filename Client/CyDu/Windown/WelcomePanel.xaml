@@ -15,6 +15,7 @@
              FontFamily="{DynamicResource MaterialDesignFont}"
 >
     <Grid>
-            
+        <Label Content="Welcome" HorizontalAlignment="Left" Margin="221,194,0,0" VerticalAlignment="Top" FontSize="80" FontFamily="Microsoft Himalaya" Height="180" Width="282"/>
+
     </Grid>
 </UserControl>

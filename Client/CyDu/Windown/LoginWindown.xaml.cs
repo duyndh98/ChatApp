@@ -33,18 +33,18 @@ namespace CyDu
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
 
-            //LoginAsync().Wait();
-            //if (AppInstance.getInstance().getUser().Id!=0)
-            //{
+            LoginAsync().Wait();
+            if (AppInstance.getInstance().GetUser().Id != 0)
+            {
 
-            //    MainChatWindown main = new MainChatWindown();
-            //    main.Show();
-            //    this.Close();
-            //}
+                MainChatWindown main = new MainChatWindown();
+                main.Show();
+                this.Close();
+            }
 
-            MainChatWindown main = new MainChatWindown();
-            main.Show();
-            this.Close();
+            //MainChatWindown main = new MainChatWindown();
+            //main.Show();
+            //this.Close();
         }
 
         private async Task LoginAsync()
@@ -53,7 +53,7 @@ namespace CyDu
             string pass = PasswordBox.Password;
             LoginUser userLogin = new LoginUser() { username = username, password = pass };
 
-            string url = "https://localhost:44344/";
+            string url = Ultils.getUrl();
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(url);
@@ -63,7 +63,7 @@ namespace CyDu
                 User user = await response.Content.ReadAsAsync<User>();           
                 if (response.IsSuccessStatusCode)
                 {
-                    AppInstance.getInstance().setUser(user);
+                    AppInstance.getInstance().SetUser(user);
                 }
             }
         }

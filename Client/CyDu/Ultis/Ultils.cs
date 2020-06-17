@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CyDu.Ultis
 {
-    class Ultils
+    static class Ultils
     {
-        public string url = "";
-        public string getUrl()
+        public static string url = "https://localhost:44344/";
+        public static string getUrl()
         {
             return url;
         }

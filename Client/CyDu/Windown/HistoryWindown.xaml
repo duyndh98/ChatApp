@@ -62,11 +62,7 @@
                     <ListView Width="330" Height="auto"  Name="lvHistory" Background="White" PreviewMouseLeftButtonUp="lvHistory_PreviewMouseLeftButtonUp" >
 
                         <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
-                        <!--<ListView.ItemContainerStyle>
-                        <Style>
-                            <EventSetter Event="PreviewMouseLeftButtonUp" Handler="FrameworkElement_PreviewMouseLeftButtonUp"></EventSetter>
-                        </Style>
-                    </ListView.ItemContainerStyle>-->
+
                         <ListView.ItemTemplate>
                             <DataTemplate>
 
@@ -92,8 +88,8 @@
                                    Width="auto"
                                    Height="auto" 
                                    Background="{x:Null}" 
-                                   Foreground="#DD000000" FontWeight="Bold" FontSize="16"
-                              >
+                                   Foreground="#DD000000" FontWeight="Normal" FontSize="14"
+                                    >
                                     </TextBlock>
 
                                     <TextBlock x:Name="TextItem"
@@ -101,8 +97,8 @@
                                     Grid.Column="1"
                                     Grid.Row="1"
                                     VerticalAlignment="Center"
-                                    Width="auto"
-                                    Height="auto">
+                                    Width="200"
+                                    Height="auto" HorizontalAlignment="Left">
                                     </TextBlock>
 
                                     <TextBlock x:Name="Date"
@@ -110,7 +106,7 @@
                                     FontSize="10"    
                                     Grid.Column="2"  
                                     Grid.Row="0"
-                                    HorizontalAlignment="Left"
+                                    HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                            >
                                     </TextBlock>
@@ -124,4 +120,4 @@
 
         </DockPanel>
     </materialDesign:Card>
-    </UserControl>
+</UserControl>

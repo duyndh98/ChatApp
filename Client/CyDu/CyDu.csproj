@@ -69,12 +69,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Conversation.cs" />
     <Compile Include="Model\LoginUser.cs" />
+    <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\MessageSend.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Ultis\AppInstance.cs" />
     <Compile Include="Ultis\Ultils.cs" />
     <Compile Include="ViewModel\ContactListItem.cs" />
-    <Compile Include="ViewModel\HistoryListItem.cs" />
+    <Compile Include="ViewModel\ConversationsView.cs" />
     <Compile Include="Windown\ChattingPanel.xaml.cs">
       <DependentUpon>ChattingPanel.xaml</DependentUpon>
     </Compile>

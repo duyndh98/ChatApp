@@ -1,8 +1,12 @@
-﻿using CyDu.ViewModel;
+﻿using CyDu.Model;
+using CyDu.Ultis;
+using CyDu.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,96 +25,126 @@ namespace CyDu.Windown
     /// </summary>
     public partial class MainChatWindown : Window
     {
-        public ObservableCollection<HistoryListItem> items;
+        public ObservableCollection<ConversationsView> ConversationViews;
         public MainChatWindown()
         {
            
             InitializeComponent();
-            items = new ObservableCollection<HistoryListItem>()
-            {
-                new HistoryListItem
-                {
-                    Username = "cy",
-                    Text = "alo alo"
-                },
-                new HistoryListItem
-                {
-                    Username = "Trường",
-                    Text = "1 2 3"
-                },
-                new HistoryListItem
-                {
-                    Username = "cy",
-                    Text = "alo alo"
-                },
-                new HistoryListItem
-                {
-                    Username = "Trường",
-                    Text = "1 2 3"
-                },new HistoryListItem
-                {
-                    Username = "cy",
-                    Text = "alo alo"
-                },
-                new HistoryListItem
-                {
-                    Username = "Trường",
-                    Text = "1 2 3"
-                },new HistoryListItem
-                {
-                    Username = "cy",
-                    Text = "alo alo"
-                },
-                new HistoryListItem
-                {
-                    Username = "Trường",
-                    Text = "1 2 3"
-                },new HistoryListItem
-                {
-                    Username = "cy",
-                    Text = "alo alo"
-                },
-                new HistoryListItem
-                {
-                    Username = "Trường",
-                    Text = "1 2 3"
-                }
-            };
-            HistoryWindown Historywindown = new HistoryWindown(items);
-            Historywindown.Name = "Historywd";
-            Historywindown.HistoryEventHandler += Windown_HistoryEventHandler;
-            //ObservableCollection<ContactListItem> itemss = new ObservableCollection<ContactListItem>()
-            //{
-            //    new ContactListItem()
-            //    {
-            //        Username = "Cy",
-            //        FirsChar ='C'
-            //    },
-            //    new ContactListItem()
-            //    {
-            //        Username = "CYlasion",
-            //        FirsChar ='C'
-            //    },
-            //    new ContactListItem()
-            //    {
-            //        Username = "Aaaa",
-            //        FirsChar ='a'
+            ConversationViews = new ObservableCollection<ConversationsView>();
 
-            //    }
-            //};
-            //ContactListControl control = new ContactListControl(itemss);
-            chattingPanel.ChatPannelTitle = "Phạm Nhật Trường";
+
+            Menupanel.HistoryEventHandler += Window_HistoryPannelEventHandle;
+
+            //load conversation panel first
+            LoadConversation().Wait();
+            HistoryWindown Historywindown = new HistoryWindown(ConversationViews);
+            Historywindown.Name = "Historywd";
+            Historywindown.HistoryEventHandler += HistoryItemEventHandler;
+            LeftPanel.Children.Clear();
             LeftPanel.Children.Add(Historywindown);
+
+
+            RightPanel.Children.Add(new WelcomePanel());
+
         }
 
-        private void Windown_HistoryEventHandler(object sender, EventArgs e)
+
+        private void Window_HistoryPannelEventHandle(object sender, EventArgs e)
+        {
+            LoadConversation().Wait();
+            HistoryWindown Historywindown = new HistoryWindown(ConversationViews);
+            Historywindown.Name = "Historywd";
+            Historywindown.HistoryEventHandler += HistoryItemEventHandler;
+            LeftPanel.Children.Clear();
+            LeftPanel.Children.Add(Historywindown);
+
+        }
+
+        private void HistoryItemEventHandler(object sender, EventArgs e)
         {
             HistoryItemSelectedArgs itemindex = e as HistoryItemSelectedArgs;
+            long pkseq = itemindex.pk_seq;
+            string usernames = itemindex.username;
+            RightPanel.Children.Clear();
+            ChattingPanel chattingPanel = new ChattingPanel();
+            RightPanel.Children.Add(chattingPanel);
+            chattingPanel.LoadMessageAsync(pkseq, usernames).Wait(); ;
+
+
         }
 
         private void setChatpanel(object sender , HistoryItemSelectedArgs e )
         {
+        }
 
+        //=======================================
+
+        private async Task LoadConversation()
+        {
+
+
+            string url = Ultils.getUrl();
+            List<Conversation> ConversationList = new List<Conversation>();
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(url);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",AppInstance.getInstance().GetUser().Token);
+                HttpResponseMessage response = client.GetAsync("/api/Users/JoinedConversations", HttpCompletionOption.ResponseContentRead).Result;
+                //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
+                ConversationList = await response.Content.ReadAsAsync<List<Conversation>>();
+                if (response.IsSuccessStatusCode)
+                {
+                    AppInstance.getInstance().SetConversation(ConversationList);        
+                }
+            }
+
+            foreach (Conversation conver in ConversationList)
+            {
+                List<long> userIds = new List<long>();
+                string user = "";
+                long conversationId = conver.ConversationId;
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.GetAsync("/api/Conversations/Members?id="+conversationId, HttpCompletionOption.ResponseContentRead).Result;
+                    //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
+                    ConversationList = await response.Content.ReadAsAsync<List<Conversation>>();
+                    foreach (Conversation Conv_users in ConversationList)
+                    {
+                        userIds.Add(Conv_users.UserId);
+                    }
+                }
+
+                foreach (long id in userIds)
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(url);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                        HttpResponseMessage response = client.GetAsync("/api/Users/"+id, HttpCompletionOption.ResponseContentRead).Result;
+                        User users = await response.Content.ReadAsAsync<User>();
+                        user += users.Username + " ";
+                        AppInstance.getInstance().setFullname(users.Id, users.FullName);
+                    }
+                }
+                if (user.Length>20)
+                {
+                    user = user.Substring(0, 17) + "...";
+                }
+
+                ConversationViews.Add(new ConversationsView()
+                {
+                    Pk_seq = conver.ConversationId,
+                    Username = user
+                }); ;
+            }
         }
     }
 }

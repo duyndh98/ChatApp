@@ -20,7 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="7*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
         </Grid.RowDefinitions>
             <WrapPanel Name="panelInfo" Margin="0" >
                 <Grid.Row>0</Grid.Row>
@@ -71,7 +71,7 @@
             </Border>
             
             </WrapPanel>
-        <ScrollViewer  x:Name="mainScroll">
+        <ScrollViewer  x:Name="mainScroll" Height="490">
             <Grid.Row>1</Grid.Row>
             <WrapPanel Name="mainPanel" >
 
@@ -79,15 +79,17 @@
         </ScrollViewer>
        
         
-        <WrapPanel Name="Input" >
+        <WrapPanel Name="Input" Height="75" >
             <Grid.Row>2</Grid.Row>
             <TextBox
+                x:Name="messTextbox"
+                AcceptsReturn="False"
+                KeyDown="TextBox_KeyDown"
                 Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
                 VerticalAlignment="Bottom"
                 HorizontalAlignment="Center"
                 Height="{Binding ActualHeight, ElementName=Input, Mode=OneWay}"
                 Width="418"
-                AcceptsReturn="True"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto"
                 materialDesign:HintAssist.Hint="Nhập tin nhắn" Background="#7FDCDADA" CaretBrush="#FF2A5BDC" Foreground="#E5000000" Margin="20,0,0,0"

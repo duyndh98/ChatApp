@@ -25,13 +25,14 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Label Content="ĐĂNG NHẬP" HorizontalAlignment="Center" Margin="0,34,0,0" VerticalAlignment="Top" FontWeight="Bold" Grid.ColumnSpan="2" Height="24" Width="90"/>
-        <Image Grid.ColumnSpan="2" HorizontalAlignment="Center" Height="97" Margin="0,83,0,0" VerticalAlignment="Top" Width="103" Source="E:\WorkspaceVS19\CyDu\CyDu\img\icon.png"  />
+        <Image Grid.ColumnSpan="2" HorizontalAlignment="Center" Height="97" Margin="0,83,0,0" VerticalAlignment="Top" Width="103" Source="/img/icon.png"  />
         <TextBox 
 				x:Name="usernameBox"
 				 Height="24" Margin="0,180,0,0" 
 				 TextWrapping="Wrap" 
 				 VerticalAlignment="Top" 
-				 Grid.ColumnSpan="2" 
+				 Grid.ColumnSpan="2"
+			     Text="guest"
 				 materialDesign:HintAssist.Hint="Tên đăng nhập"
 				materialDesign:HintAssist.HelperText="Tên đăng nhập/ email" 
 			
@@ -45,6 +46,7 @@
 			  materialDesign:HintAssist.HelperText="Ít nhất 8 kí tự" 
 			  Grid.ColumnSpan="2" Margin="0,5,0,0"
 			  Height="24" 
+			Password="guest@pw"
 		      VerticalAlignment="Top" Grid.Row="1" 
 			/>
         <Button 

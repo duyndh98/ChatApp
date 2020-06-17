@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CyDu.Model;
+using CyDu.Ultis;
 
 namespace CyDu.Windown
 {
@@ -22,40 +26,84 @@ namespace CyDu.Windown
     public partial class ChattingPanel : UserControl
     {
         public string ChatPannelTitle { get; set; }
+        private long ConversationId;
+        private string usernames;
 
         public ChattingPanel()
         {
 
             InitializeComponent();
             this.DataContext = this;
-            List<MessageBox> boxs = new List<MessageBox>()
+        
+        }
+        public async Task LoadMessageAsync(long pk_seq,string usernames)
+        {
+            string url = Ultils.getUrl();
+            this.ConversationId = pk_seq;
+            this.usernames = usernames;
+            mainPanel.Children.Clear();
+            using (HttpClient client = new HttpClient())
             {
-                new MessageBox( "Cy - 1ty3 năm trc", "How to summon a legal loli",MessageBox.Side.User)
-          ,
-                new MessageBox( "Trường- 11h trước ","An exception is a situation, which occured by the runtime error. In other words, an exception is a runtime error. An exception may result in loss of data or an abnormal execution of program.",MessageBox.Side.Other)
-
-        ,
-                new MessageBox( "Cy - 1ty3 năm trc", "How to summon a legal loli",MessageBox.Side.User)
-          ,
-                new MessageBox( "Trường- 11h trước ","An exception is a situation, which occured by the runtime error. In other words, an exception is a runtime error. An exception may result in loss of data or an abnormal execution of program.",MessageBox.Side.Other)
-
-,
-                new MessageBox( "Cy - 1ty3 năm trc", "How to summon a legal loli",MessageBox.Side.User)
-          ,
-                new MessageBox( "Trường- 11h trước ","An exception is a situation, which occured by the runtime error. In other words, an exception is a runtime error. An exception may result in loss of data or an abnormal execution of program.",MessageBox.Side.Other)
-
-,
-                new MessageBox( "Cy - 1ty3 năm trc", "How to summon a legal loli",MessageBox.Side.User)
-          ,
-                new MessageBox( "Trường- 11h trước ","An exception is a situation, which occured by the runtime error. In other words, an exception is a runtime error. An exception may result in loss of data or an abnormal execution of program.",MessageBox.Side.Other)
-   };
-
-            foreach (MessageBox box in boxs)
-            {
-                mainPanel.Children.Add(box);
+                client.BaseAddress = new Uri(url);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                HttpResponseMessage response = client.GetAsync("/api/Messages/Conversations?conversationId=" + pk_seq, HttpCompletionOption.ResponseContentRead).Result;
+                //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
+                List<Message> listmassage = await response.Content.ReadAsAsync<List<Message>>();
+                if (response.IsSuccessStatusCode)
+                {
+                    foreach (Message mess in listmassage)
+                    {
+                        MessageBox.Side side;
+                        if (mess.SenderId == AppInstance.getInstance().GetUser().Id)
+                        {
+                            side = MessageBox.Side.User;
+                        }
+                        else
+                        {
+                            side = MessageBox.Side.Other;
+                        }
+                        string title = AppInstance.getInstance().getFullname(mess.SenderId) +"      "+ mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy");
+                        MessageBox messBos = new MessageBox(title,mess.Content,side);
+                        mainPanel.Children.Add(messBos);
+                    }
+                }
             }
 
+
+            Titlelable.Content = usernames;
+
             mainScroll.ScrollToBottom();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                string url = Ultils.getUrl();
+                string content = messTextbox.Text;
+                MessageSend mess = new MessageSend()
+                {
+                    Content = content,
+                    ConversationId = this.ConversationId,
+                    Type = 1
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.PostAsJsonAsync("/api/Messages", mess).Result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        System.Windows.MessageBox.Show("Lỗi khi gửi tin");
+                    }
+                }
+                messTextbox.Text = "";
+                LoadMessageAsync(this.ConversationId, this.usernames).Wait();
+            }
         }
     }
 }

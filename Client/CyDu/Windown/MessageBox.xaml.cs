@@ -35,7 +35,9 @@ namespace CyDu.Windown
             if (side==Side.User)
             {
                 ImgMess1.Visibility = Visibility.Hidden;
-                TessCard.Background = new SolidColorBrush(Color.FromArgb(100, 210, 222, 228));
+                TextMess.Background = new SolidColorBrush(Color.FromArgb(100, 210, 222, 228));
+                TextMess.HorizontalAlignment = HorizontalAlignment.Right;
+                TileMess.HorizontalAlignment = HorizontalAlignment.Right;
             }
             else
             {

@@ -21,10 +21,12 @@ namespace CyDu.Windown
     /// </summary>
     public partial class MenuControl : UserControl
     {
+        public event EventHandler HistoryEventHandler;
+
         public MenuControl()
         {
             InitializeComponent();
-            userFullName.Content = AppInstance.getInstance().getUser().FullName;
+            userFullName.Content = AppInstance.getInstance().GetUser().FullName;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -34,7 +36,7 @@ namespace CyDu.Windown
 
         private void btMess_Click(object sender, RoutedEventArgs e)
         {
-
+            HistoryEventHandler(this, new EventArgs());
         }
 
         private void btCall_Click(object sender, RoutedEventArgs e)

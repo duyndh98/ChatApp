@@ -22,12 +22,13 @@ namespace CyDu.Windown
     /// </summary>
     public partial class HistoryWindown : UserControl
     {
-        public ObservableCollection<HistoryListItem> History { get; set; }
+        public ObservableCollection<ConversationsView> History { get; set; }
         public event EventHandler HistoryEventHandler;
 
-        public HistoryWindown(ObservableCollection<HistoryListItem> _listhistory)
+        public HistoryWindown(ObservableCollection<ConversationsView> _listhistory)
         {
             InitializeComponent();
+            History = _listhistory;
             lvHistory.ItemsSource = _listhistory;
         }
 
@@ -45,7 +46,11 @@ namespace CyDu.Windown
         private void lvHistory_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             ListView lv = sender as ListView;
-            HistoryEventHandler(this, new HistoryItemSelectedArgs() { itemIndex = lv.SelectedIndex });
+            HistoryEventHandler(this, new HistoryItemSelectedArgs() {
+                itemIndex = lv.SelectedIndex ,
+                pk_seq = History.ElementAt(lv.SelectedIndex).Pk_seq,
+                username = History.ElementAt(lv.SelectedIndex).Username
+            });
           
         }
 
@@ -58,6 +63,7 @@ namespace CyDu.Windown
     public class HistoryItemSelectedArgs : EventArgs
     {
         public int itemIndex { get; set; }
-        public int pk_seq { get; set; }
+        public long pk_seq { get; set; }
+        public string username { get; set; }
     }
 }

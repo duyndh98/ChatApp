@@ -36,23 +36,27 @@
                 <Image.Source>/img/user2.PNG</Image.Source>
                 <Image.Margin>10,10,10,10</Image.Margin>
             </Image>
-            <TextBlock x:Name="TileMess" Grid.Row="0" Grid.Column="1" Text="{Binding Title}" Foreground="Black" FontSize="10">
-                 <TextBlock.HorizontalAlignment>Left</TextBlock.HorizontalAlignment>
-                 <TextBlock.VerticalAlignment>Center</TextBlock.VerticalAlignment>
-              </TextBlock>
+        <TextBlock x:Name="TileMess" Grid.Row="0" Grid.Column="1" Text="{Binding Title}" Foreground="Black" FontSize="10">
+            <TextBlock.HorizontalAlignment>
+                <HorizontalAlignment>Left</HorizontalAlignment>
+            </TextBlock.HorizontalAlignment>
+            <TextBlock.VerticalAlignment>
+                <VerticalAlignment>Center</VerticalAlignment>
+            </TextBlock.VerticalAlignment>
+        </TextBlock>
 
         <materialDesign:Card
                Grid.Row="1" Grid.Column="1" 
               x:Name="TessCard"
-              Background="#FF81D7FF"
+              Background="#0081D7FF"
               Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
               Padding="8"
               UniformCornerRadius="6">
-            <TextBlock x:Name="TextMess"  Text="{Binding Text}" Foreground="Black" FontSize="12"
-                TextWrapping="Wrap">
-              You can adjust the corner radius
-                <TextBlock.HorizontalAlignment>Left</TextBlock.HorizontalAlignment>
-                <TextBlock.VerticalAlignment>Top</TextBlock.VerticalAlignment>
+            <TextBlock x:Name="TextMess" Background="#FF81D7FF"  Text="{Binding Text}" Foreground="Black" FontSize="12"
+                TextWrapping="Wrap" Margin="5" Padding="10" HorizontalAlignment="Left" >
+                <TextBlock.VerticalAlignment>
+                    <VerticalAlignment>Top</VerticalAlignment>
+                </TextBlock.VerticalAlignment>
             </TextBlock>
         </materialDesign:Card>
         

@@ -17,15 +17,21 @@
             <RowDefinition Height="6*" />
             <RowDefinition Height="15*" />
         </Grid.RowDefinitions>
-        <local:MenuControl></local:MenuControl>
+        <local:MenuControl x:Name="Menupanel">
+            
+        </local:MenuControl>
         <WrapPanel Name="LeftPanel">
             <Grid.Row>1</Grid.Row>
             <Grid.Column>0</Grid.Column>
         </WrapPanel>
-        <local:ChattingPanel x:Name="chattingPanel">
+        <WrapPanel x:Name="RightPanel">
             <Grid.RowSpan>2</Grid.RowSpan>
             <Grid.Column>1</Grid.Column>
-        </local:ChattingPanel>
+        </WrapPanel>
+        <!--<local:ChattingPanel x:Name="chattingPanel">
+            <Grid.RowSpan>2</Grid.RowSpan>
+            <Grid.Column>1</Grid.Column>
+        </local:ChattingPanel>-->
       
     </Grid>
 </Window>

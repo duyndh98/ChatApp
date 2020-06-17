@@ -25,7 +25,7 @@ namespace CyDu.Model
         [JsonProperty("role")]
         public string Role { get; set; }
 
-        [JsonProperty("token")]
+        [JsonProperty("token", NullValueHandling = NullValueHandling.Ignore)]
         public string Token { get; set; }
     }
 }
