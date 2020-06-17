@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-    public class ConversationMemberModel
+    public class ConversationUserModel
     {
         public int ConversationId { get; set; }
         public int UserId { get; set; }

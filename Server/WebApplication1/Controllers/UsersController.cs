@@ -219,7 +219,7 @@ namespace WebApplication1.Controllers
             try
             {
                 var conversations = _conversationUserService.GetConversations(Auth.GetUserIdFromClaims(this));
-                var model = _mapper.Map<IList<ConversationMemberModel>>(conversations);
+                var model = _mapper.Map<IList<ConversationUserModel>>(conversations);
                 return Ok(model);
             }
             catch (Exception ex)

@@ -20,8 +20,8 @@ namespace WebApplication1.Helpers
             CreateMap<Conversation, ConversationViewModel>();
             CreateMap<ConversationCreationModel, Conversation>();
             CreateMap<ConversationUpdateModel, Conversation>();
-            CreateMap<ConversationMemberModel, ConversationUser>();
-            CreateMap<ConversationUser, ConversationMemberModel>();
+            CreateMap<ConversationUserModel, ConversationUser>();
+            CreateMap<ConversationUser, ConversationUserModel>();
 
             CreateMap<MessageCreationModel, Message>();
             CreateMap<MessageUpdateModel, Message>();

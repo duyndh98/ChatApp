@@ -137,7 +137,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("Members")]
-        public IActionResult PostMember([FromBody]ConversationMemberModel model)
+        public IActionResult PostMember([FromBody]ConversationUserModel model)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpDelete("Members")]
-        public IActionResult DeleteMember([FromBody]ConversationMemberModel model)
+        public IActionResult DeleteMember([FromBody]ConversationUserModel model)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace WebApplication1.Controllers
             try
             {
                 var members = _conversationUserService.GetMembers(id);
-                var model = _mapper.Map<IList<ConversationMemberModel>>(members);
+                var model = _mapper.Map<IList<ConversationUserModel>>(members);
                 return Ok(model);
             }
             catch (Exception ex)

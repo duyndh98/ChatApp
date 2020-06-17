@@ -34,7 +34,7 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebApplication1Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("WebApplication1Context"))
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("WebApplication1Context"))
             );
 
             services.AddCors();
