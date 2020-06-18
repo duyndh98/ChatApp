@@ -15,9 +15,6 @@ namespace WebApplication1.Services
         Message Create(Message message);
         void Update(Message message);
         void Delete(int id);
-
-        IEnumerable<Message> GetMessagesOfConversation(int conversationId);
-        Tuple<long, IEnumerable<Message>> GetNewMessagesOfConversation(int conversationId, long lastTimeSpan);
     }
 
     public class MessageService : IMessageService
@@ -96,31 +93,6 @@ namespace WebApplication1.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Message> GetMessagesOfConversation(int conversationId)
-        {
-            // Check
-            if (!_context.Conversations.Any(x => x.Id == conversationId))
-                throw new Exception("Conversation not found");
-
-            return _context.Messages.Where(x => x.ConversationId == conversationId);
-        }
-
-        public Tuple<long, IEnumerable<Message>> GetNewMessagesOfConversation(int conversationId, long lastTimeSpan)
-        {
-            //var lastTime = Utils.Int64ToDateTime(lastTimeSpan);
-            var messages = GetMessagesOfConversation(conversationId);
-            var filtedMessages = new List<Message>();
-            foreach (var message in messages)
-            {
-                var messageTimeSpan = Utils.DateTimeToInt64(message.ArrivalTime);
-                if (messageTimeSpan > lastTimeSpan)
-                    filtedMessages.Add(message);
-            }
-
-            var lastTime = filtedMessages.Aggregate((x, y) => x.ArrivalTime > y.ArrivalTime ? x : y).ArrivalTime;
-            lastTimeSpan = Utils.DateTimeToInt64(lastTime);
-
-            return new Tuple<long, IEnumerable<Message>>(lastTimeSpan, filtedMessages);
-        }
+        
     }
 }

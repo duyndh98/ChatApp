@@ -176,9 +176,42 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                var members = _conversationUserService.GetMembers(id);
-                var model = _mapper.Map<IList<ConversationUserModel>>(members);
+                var conversationUsers = _conversationService.GetConversationUsers(id);
+                var users = conversationUsers.Select(x => x.User);
+                var model = _mapper.Map<IList<UserViewModel>>(users);
                 return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("Messages")]
+        public IActionResult GetMessages(int id)
+        {
+            try
+            {
+                var messages = _conversationService.GetMessages(id);
+                var model = _mapper.Map<IList<MessageViewModel>>(messages);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("Messages/New")]
+        public IActionResult GetNewMessages(int id, long lastTimeSpan)
+        {
+            try
+            {
+                var timeMessages = _conversationService.GetNewMessages(id, lastTimeSpan);
+                var time = timeMessages.Item1;
+                var messages = timeMessages.Item2;
+                var mappedMessages = _mapper.Map<IList<MessageViewModel>>(messages);
+                return Ok(new Tuple<long, IList<MessageViewModel>>(time, mappedMessages));
             }
             catch (Exception ex)
             {

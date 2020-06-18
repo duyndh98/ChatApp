@@ -213,13 +213,14 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpGet("JoinedConversations")]
-        public IActionResult GetJoinedConversation()
+        [HttpGet("Owner/Conversations")]
+        public IActionResult GetConversations()
         {
             try
             {
-                var conversations = _conversationUserService.GetConversations(Auth.GetUserIdFromClaims(this));
-                var model = _mapper.Map<IList<ConversationUserModel>>(conversations);
+                var conversationUsers = _userService.GetConversationUsers(Auth.GetUserIdFromClaims(this));
+                var conversations = conversationUsers.Select(x => x.Conversation);
+                var model = _mapper.Map<IList<ConversationViewModel>>(conversations);
                 return Ok(model);
             }
             catch (Exception ex)
