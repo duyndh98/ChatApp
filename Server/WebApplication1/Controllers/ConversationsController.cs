@@ -24,6 +24,7 @@ namespace WebApplication1.Controllers
         private IConversationService _conversationService;
         private IConversationUserService _conversationUserService;
         private IMessageService _messageService;
+        private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
@@ -31,12 +32,14 @@ namespace WebApplication1.Controllers
               IConversationService conversationService,
               IConversationUserService conversationUserService,
               IMessageService messageService,
+              IUserService userService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _conversationService = conversationService;
             _conversationUserService = conversationUserService;
             _messageService = messageService;
+            _userService = userService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -212,6 +215,60 @@ namespace WebApplication1.Controllers
                 var messages = timeMessages.Item2;
                 var mappedMessages = _mapper.Map<IList<MessageViewModel>>(messages);
                 return Ok(new Tuple<long, IList<MessageViewModel>>(time, mappedMessages));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("WithMembers")]
+        public IActionResult PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
+        {
+            try
+            {
+                var members = new List<User>();
+
+                // Add current member
+                model.UserIds.Add(Auth.GetUserIdFromClaims(this));
+
+                if (model.UserIds.Count <= 1)
+                    throw new Exception("Too few members");
+
+                foreach (var userId in model.UserIds)
+                {
+                    if (model.UserIds.Where(x => x == userId).Count() > 1)
+                        throw new Exception("Duplicated members");
+
+                    members.Add(_userService.GetById(userId));
+                }
+
+                // Check
+                if (members.Count == 2)
+                {
+                    if (_conversationService.Check2MembersAlreadyInConversation(members[0], members[1]))
+                        throw new Exception("Conversation already exist");
+                }
+
+                // Map model to entity
+                var conversation = new Conversation()
+                {
+                    Name = model.Name
+                };
+
+                // Create
+                var createdConversation = _conversationService.Create(conversation);
+
+                foreach (var user in members)
+                {
+                    _conversationUserService.Create(new ConversationUser()
+                    {
+                        ConversationId = createdConversation.Id,
+                        UserId = user.Id
+                    });
+                }
+            
+                return Ok();
             }
             catch (Exception ex)
             {

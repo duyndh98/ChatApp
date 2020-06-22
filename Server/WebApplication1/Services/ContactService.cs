@@ -7,18 +7,18 @@ using WebApplication1.Entities;
 
 namespace WebApplication1.Services
 {
-    public interface IConversationUserService
+    public interface IContactService
     {
         IEnumerable<ConversationUser> GetAll();
         ConversationUser Create(ConversationUser conversationUser);
         void Delete(ConversationUser conversationUser);
     }
 
-    public class ConversationUserService : IConversationUserService
+    public class ContactService : IContactService
     {
         private WebApplication1Context _context;
 
-        public ConversationUserService(WebApplication1Context context)
+        public ContactService(WebApplication1Context context)
         {
             _context = context;
         }
@@ -38,7 +38,7 @@ namespace WebApplication1.Services
                 throw new Exception("User not found");
 
             if (_context.ConversationUsers.Any(
-                x => (x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId)))
+                x => x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId))
                 throw new Exception("Member already exist");
 
             // Add

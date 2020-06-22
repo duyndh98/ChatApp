@@ -20,6 +20,8 @@ namespace WebApplication1.Services
 
         IEnumerable<Message> GetMessages(int id);
         Tuple<long, IEnumerable<Message>> GetNewMessages(int id, long lastTimeSpan);
+
+        bool Check2MembersAlreadyInConversation(User user1, User user2);
     }
 
     public class ConversationService : IConversationService
@@ -123,6 +125,21 @@ namespace WebApplication1.Services
             lastTimeSpan = Utils.DateTimeToInt64(lastTime);
 
             return new Tuple<long, IEnumerable<Message>>(lastTimeSpan, filtedMessages);
+        }
+
+        public bool Check2MembersAlreadyInConversation(User user1, User user2)
+        {
+            foreach (var conversation in _context.Conversations)
+            {
+                if (conversation.ConversationUsers.Count == 2)
+                {
+                    var memberIds = conversation.ConversationUsers.Select(x => x.UserId);
+                    if (memberIds.Contains(user1.Id) && memberIds.Contains(user2.Id))
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

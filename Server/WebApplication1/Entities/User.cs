@@ -19,5 +19,8 @@ namespace WebApplication1.Entities
         public virtual ICollection<ConversationUser> ConversationUsers { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+
+        //public virtual ICollection<Contact> ContactsFrom { get; set; }
+        //public virtual ICollection<Contact> ContactsTo { get; set; }
     }
 }
