@@ -9,9 +9,12 @@ namespace WebApplication1.Services
 {
     public interface IContactService
     {
-        IEnumerable<ConversationUser> GetAll();
-        ConversationUser Create(ConversationUser conversationUser);
-        void Delete(ConversationUser conversationUser);
+        IEnumerable<Contact> GetAll();
+        Contact Create(Contact contact);
+        void Update(Contact contact);
+        void Delete(Contact contact);
+
+        IEnumerable<Contact> GetContacts(int userId);
     }
 
     public class ContactService : IContactService
@@ -23,41 +26,60 @@ namespace WebApplication1.Services
             _context = context;
         }
 
-        public IEnumerable<ConversationUser> GetAll()
+        public IEnumerable<Contact> GetAll()
         {
-            return _context.ConversationUsers;
+            return _context.Contacts;
         }
 
-        public ConversationUser Create(ConversationUser conversationUser)
+        public IEnumerable<Contact> GetContacts(int userId)
+        {
+            return _context.Contacts.Where(x => x.FromUserId == userId || x.ToUserId == userId);
+        }
+
+        public Contact Create(Contact contact)
         {
             // Check
-            if (!_context.Conversations.Any(x => x.Id == conversationUser.ConversationId))
-                throw new Exception("Conversation not found");
+            if (contact.FromUserId == contact.ToUserId)
+                throw new Exception("Invalid contact");
 
-            if (!_context.Users.Any(x => x.Id == conversationUser.UserId))
-                throw new Exception("User not found");
+            if (_context.Contacts.Any(x => x.FromUserId == contact.FromUserId && x.ToUserId == contact.ToUserId)
+                || _context.Contacts.Any(x => x.ToUserId == contact.FromUserId && x.FromUserId == contact.ToUserId))
+                throw new Exception("Contact already exist");
 
-            if (_context.ConversationUsers.Any(
-                x => x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId))
-                throw new Exception("Member already exist");
+            contact.Status = ContactStatus.Pending;
 
             // Add
-            _context.ConversationUsers.Add(conversationUser);
+            _context.Contacts.Add(contact);
             _context.SaveChanges();
 
             // Ok
-            return conversationUser;
+            return contact;
         }
 
-        public void Delete(ConversationUser conversationUser)
+        public void Update(Contact contact)
         {
             // Find
-            if (!_context.ConversationUsers.Any(
-                x => x.ConversationId == conversationUser.ConversationId && x.UserId == conversationUser.UserId))
-                throw new Exception("Member not found");
+            var foundContact = _context.Contacts.FirstOrDefault(x =>
+                (x.FromUserId == contact.FromUserId && x.ToUserId == contact.ToUserId) ||
+                (x.ToUserId == contact.FromUserId && x.FromUserId == contact.ToUserId));
+
+            if (foundContact == null)
+                throw new Exception("Contact not found");
+
+            // Update
+            _context.Contacts.Update(contact);
+            _context.SaveChanges();
+        }
+
+        public void Delete(Contact contact)
+        {
+            // Find
+            if (!_context.Contacts.Any(x => x.FromUserId == contact.FromUserId && x.ToUserId == contact.ToUserId)
+                && !_context.Contacts.Any(x => x.ToUserId == contact.FromUserId && x.FromUserId == contact.ToUserId))
+                throw new Exception("Contact not found");
 
             // Delete
-            _context.ConversationUsers.Remove(conversationUser);
+            _context.Contacts.Remove(contact);
             _context.SaveChanges();
         }
     }

@@ -28,17 +28,20 @@ namespace WebApplication1.Controllers
     {
         private IUserService _userService;
         private IConversationUserService _conversationUserService;
+        private IContactService _contactService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
               IUserService userService,
               IConversationUserService conversationUserService,
+              IContactService contactService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _conversationUserService = conversationUserService;
+            _contactService = contactService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -229,5 +232,22 @@ namespace WebApplication1.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("Owner/Contacts")]
+        public IActionResult GetContacts()
+        {
+            try
+            {
+                var contacts = _contactService.GetContacts(Auth.GetUserIdFromClaims(this));
+                var model = _mapper.Map<IList<ContactViewModel>>(contacts);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
     }
 }

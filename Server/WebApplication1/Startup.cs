@@ -86,6 +86,7 @@ namespace WebApplication1
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IConversationUserService, ConversationUserService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IContactService, ContactService>();
 
             // Swagger
             services.AddSwaggerDocumentation();

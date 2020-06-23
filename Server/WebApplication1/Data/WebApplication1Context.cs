@@ -9,7 +9,7 @@ namespace WebApplication1.Data
 {
     public class WebApplication1Context : DbContext
     {
-        public WebApplication1Context (DbContextOptions<WebApplication1Context> options)
+        public WebApplication1Context(DbContextOptions<WebApplication1Context> options)
             : base(options)
         {
         }
@@ -22,15 +22,19 @@ namespace WebApplication1.Data
 
         public DbSet<WebApplication1.Entities.Message> Messages { get; set; }
 
-        //public DbSet<WebApplication1.Entities.Contact> Contacts { get; set; }
+        public DbSet<WebApplication1.Entities.Contact> Contacts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ConversationUser>().HasKey(x => new { x.ConversationId, x.UserId });
 
-            //modelBuilder.Entity<Contact>().HasKey(e => new { e.FromUserId, e.ToUserId });
-            //modelBuilder.Entity<Contact>().HasOne(e => e.FromUser).WithMany(e => e.ContactsTo).HasForeignKey(e => e.FromUserId);
-            //modelBuilder.Entity<Contact>().HasOne(e => e.ToUser).WithMany(e => e.ContactsFrom).HasForeignKey(e => e.ToUserId);
+            modelBuilder.Entity<Contact>().HasKey(x => new { x.FromUserId, x.ToUserId });
+
+            //modelBuilder.Entity<User>().HasMany(x => x.FromContacts).WithOne();
+            //modelBuilder.Entity<User>().HasMany(x => x.ToContacts).WithOne();
+
+            //modelBuilder.Entity<Contact>().HasOne(x => x.FromUser).WithMany();
+            //modelBuilder.Entity<Contact>().HasOne(x => x.ToUser).WithMany();
         }
     }
 }

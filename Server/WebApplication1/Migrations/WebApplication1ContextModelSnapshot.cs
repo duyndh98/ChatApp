@@ -19,6 +19,22 @@ namespace WebApplication1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("WebApplication1.Entities.Contact", b =>
+                {
+                    b.Property<int>("FromUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("FromUserId", "ToUserId");
+
+                    b.ToTable("Contacts");
+                });
+
             modelBuilder.Entity("WebApplication1.Entities.Conversation", b =>
                 {
                     b.Property<int>("Id")
