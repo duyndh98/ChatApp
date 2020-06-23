@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace CyDu.Model
 {
-    public class Conversation
+    class ConversationWithOther
     {
-        [JsonProperty("id")]
-        public long Id { get; set; }
-
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("userIds")]
+        public long[] UserIds { get; set; }
     }
 }

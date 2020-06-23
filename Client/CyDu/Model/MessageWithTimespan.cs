@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace CyDu.Model
 {
-    public class Conversation
+    class MessageWithTimespan
     {
-        [JsonProperty("id")]
-        public long Id { get; set; }
+        [JsonProperty("item1")]
+        public long Item1 { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("item2")]
+        public Message[] Item2 { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace CyDu.Ultis
     {
         private static AppInstance _instance = null;
         private static  User _user;
+        //private static long _lastTimespan;
         private static List<Conversation> _conversationList;
         private static Dictionary<long, string> _dirFullname;
         public static AppInstance getInstance()
@@ -25,12 +26,15 @@ namespace CyDu.Ultis
         protected AppInstance()
         {
             _user = new User();
+            //_lastTimespan = 0;
             _dirFullname = new Dictionary<long, string>();
+
         }
 
         public  void SetUser(User user)
         {
             _user = user;
+            SetFullname(user.Id, user.FullName);
             //_user.Token = "Bearer  " + user.Token;
         }
 
@@ -49,22 +53,28 @@ namespace CyDu.Ultis
             return _conversationList;
         }
 
-        public void setFullname(long id,string name)
+        public void SetFullname(long id,string name)
         {
-            try
+            if (!   _dirFullname.ContainsKey(id))
             {
                 _dirFullname.Add(id, name);
 
             }
-            catch (ArgumentException)
-            {
-                ///đã có key
-            }
+           
         }
 
-        public string getFullname(long id)
+        public string GetFullname(long id)
         {
             return _dirFullname[id];
         }
+        //public long GetLastTimespan()
+        //{
+        //    return _lastTimespan;
+        //}
+
+        //public void SetLastTimespan(long timepsan)
+        //{
+        //    _lastTimespan = timepsan;
+        //}
     }
 }

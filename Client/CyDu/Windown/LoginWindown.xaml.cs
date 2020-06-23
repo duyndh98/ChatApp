@@ -60,10 +60,15 @@ namespace CyDu
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response =  client.PostAsJsonAsync("api/Users/Authenticate", userLogin).Result;
-                User user = await response.Content.ReadAsAsync<User>();           
                 if (response.IsSuccessStatusCode)
                 {
+                    User user = await response.Content.ReadAsAsync<User>();
                     AppInstance.getInstance().SetUser(user);
+                }
+                else
+                {
+                    _404Mess mess = await response.Content.ReadAsAsync<_404Mess>();
+                    ErrLable.Content = mess.Message;
                 }
             }
         }

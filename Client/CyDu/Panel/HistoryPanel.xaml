@@ -17,7 +17,7 @@
  
         >
     <materialDesign:Card
-    materialDesign:ShadowAssist.ShadowDepth="Depth2"  Background="#FFE4E4E4"
+    materialDesign:ShadowAssist.ShadowDepth="Depth2"  Background="#F0F4F8"
     >
         <DockPanel>
             <StackPanel Margin="0,0,0,10">
@@ -27,39 +27,42 @@
                         <ColumnDefinition Width="1*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <ComboBox
-                    Margin="5,5,5,0"
-                  materialDesign:HintAssist.Hint="Thời gian" 
+                      Margin="5,0"
+                      materialDesign:HintAssist.Hint="Recent Chat" VerticalAlignment="Bottom" Height="29" 
                     >
                         <Grid.Column>0</Grid.Column>
 
                         <ComboBoxItem>
-                            Thời gian
+                            Sort by time
                         </ComboBoxItem>
                         <ComboBoxItem>
-                            Chưa xem
+                            Sort by unread
                         </ComboBoxItem>
 
                     </ComboBox>
-                    <Button
-                  Grid.Column="1"
-                 Name="Btadd"
-                 Click="Btadd_Click"
-                 ToolTip="MaterialDesignFlatButton"
-                 Width="Auto"
-                 Height="48" 
-                 BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Background="{x:Null}" Margin="0,0,0,0"
-                    >
-                        <WrapPanel>
-                            <materialDesign:PackIcon Kind="Plus"  Width="auto" Height="auto" Foreground="#DD263CCB" />
-                            <Label Content="Trò chuyện" HorizontalAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" Foreground="#DD2300FF" />
-                        </WrapPanel>
-                    </Button>
+
+                    <Border  Grid.Column="1"  CornerRadius="15" BorderBrush="Gray" Background="White" BorderThickness="2" DockPanel.Dock="Top" Width="113" Height="40" >
+                        <Button
+                
+                         Name="Btadd"
+                         Click="Btadd_Click"
+                         ToolTip="MaterialDesignFlatButton"
+                         Height="35" 
+                         Background="{x:Null}" Margin="-4,-2,0,0" VerticalAlignment="Bottom" BorderBrush="#00000000" Width="100"
+                            >
+                            <WrapPanel>
+                                <materialDesign:PackIcon Kind="Plus"  Width="auto" Height="auto" Foreground="#DD263CCB" />
+                                <Label Content="Chat" HorizontalAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" Foreground="#DD2300FF" />
+                            </WrapPanel>
+                        </Button>
+                    </Border>
+
 
                 </Grid>
 
 
                 <ScrollViewer Height="414">
-                    <ListView Width="330" Height="auto"  Name="lvHistory" Background="White" PreviewMouseLeftButtonUp="lvHistory_PreviewMouseLeftButtonUp" >
+                    <ListView Width="335" Height="auto"  Name="lvHistory" Background="White" PreviewMouseLeftButtonUp="lvHistory_PreviewMouseLeftButtonUp" >
 
                         <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
 

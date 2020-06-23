@@ -24,13 +24,13 @@ namespace CyDu.Windown
         public enum Side { User , Other  }
         public string Title { get; set; }
         public string Text { get; set; }
-        public MessageBox(string Title,string  Text, Side side)
+        public MessageBox(string Title,string  Text,string arriveTime, Side side)
         {
             InitializeComponent();
 
             this.Text = Text;
             this.Title = Title;
-            TileMess.Text = Title ;
+            TileMess.Text = Title+"    "+arriveTime ;
             TextMess.Text = Text;
             if (side==Side.User)
             {
@@ -38,6 +38,7 @@ namespace CyDu.Windown
                 TextMess.Background = new SolidColorBrush(Color.FromArgb(100, 210, 222, 228));
                 TextMess.HorizontalAlignment = HorizontalAlignment.Right;
                 TileMess.HorizontalAlignment = HorizontalAlignment.Right;
+                TileMess.Text = arriveTime;
             }
             else
             {
