@@ -12,6 +12,7 @@ namespace WebApplication1.Services
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        User GetByUserName(string userName);
         User Create(User user, string password);
         void Update(User user, string password);
         void Delete(int id);
@@ -89,6 +90,15 @@ namespace WebApplication1.Services
         public User GetById(int id)
         {
             var user = _context.Users.Find(id);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return user;
+        }
+
+        public User GetByUserName(string userName)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.UserName == userName);
             if (user == null)
                 throw new Exception("User not found");
 

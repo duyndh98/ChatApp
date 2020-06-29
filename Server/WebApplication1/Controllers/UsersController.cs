@@ -142,6 +142,22 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpGet("ByUserName/{userName}")]
+        public IActionResult GetUser(string userName)
+        {
+            try
+            {
+                var user = _userService.GetByUserName(userName);
+                var model = _mapper.Map<UserViewModel>(user);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                // Return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpGet("Owner")]
         public IActionResult GetUserOwner()
         {

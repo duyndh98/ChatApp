@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
             try
             {
                 var contacts = _contactService.GetAll();
-                var model = _mapper.Map<IList<Contact>>(contacts);
+                var model = _mapper.Map<IList<ContactViewModel>>(contacts);
                 return Ok(model);
             }
             catch (Exception ex)
