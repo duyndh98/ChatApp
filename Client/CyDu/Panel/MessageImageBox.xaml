@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="CyDu.Panel.MessageImageBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CyDu.Panel"
+             mc:Ignorable="d" 
+             d:DesignWidth="650"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="12"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             FontFamily="{DynamicResource MaterialDesignFont}" Width="650" Height="300" 
+             Padding="5,2,5,2">
+    <Grid  materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="240" >
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="6*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="7*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Image Grid.RowSpan="1" Grid.Row="1"  Name="ImgMess1" >
+            <Image.Source>/img/user2.PNG</Image.Source>
+            <Image.Margin>10,10,10,10</Image.Margin>
+        </Image>
+        <Image Grid.RowSpan="1" Grid.Row="1" Grid.Column="2" Name="ImgMess2" >
+            <Image.Source>/img/user2.PNG</Image.Source>
+            <Image.Margin>10,10,10,10</Image.Margin>
+        </Image>
+        <TextBlock x:Name="TileMess" Grid.Row="0" Grid.Column="1" Text="{Binding Title}" Foreground="Black" FontSize="10">
+            <TextBlock.HorizontalAlignment>
+                <HorizontalAlignment>Left</HorizontalAlignment>
+            </TextBlock.HorizontalAlignment>
+            <TextBlock.VerticalAlignment>
+                <VerticalAlignment>Center</VerticalAlignment>
+            </TextBlock.VerticalAlignment>
+        </TextBlock>
+
+        <materialDesign:Card
+               Grid.Row="1" Grid.Column="1" 
+              x:Name="TessCard"
+              Background="#0081D7FF"
+              Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+              Padding="8"
+              UniformCornerRadius="6">
+            <!--<TextBlock x:Name="TextMess" Background="#FF81D7FF"  Text="{Binding Text}" Foreground="Black" FontSize="12"
+                TextWrapping="Wrap" Margin="5" Padding="10" HorizontalAlignment="Left" >
+                <TextBlock.VerticalAlignment>
+                    <VerticalAlignment>Top</VerticalAlignment>
+                </TextBlock.VerticalAlignment>
+            </TextBlock>-->
+            
+            
+            <Image MouseLeftButtonUp="ImageMessContent_MouseLeftButtonUp" x:Name="ImageMessContent" 
+                   Height="250" HorizontalAlignment="Left" >
+                
+            </Image>
+        </materialDesign:Card>
+
+    </Grid>
+
+</UserControl>

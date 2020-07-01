@@ -21,6 +21,9 @@ namespace CyDu.Panel
     /// </summary>
     public partial class UserInfoPopup : UserControl
     {
+
+        public event EventHandler LogoutEventhandler;
+
         public UserInfoPopup()
         {
             InitializeComponent();
@@ -31,7 +34,7 @@ namespace CyDu.Panel
 
         private void btlogout_Click(object sender, RoutedEventArgs e)
         {
-            
+            LogoutEventhandler(this, new EventArgs());
         }
     }
 }

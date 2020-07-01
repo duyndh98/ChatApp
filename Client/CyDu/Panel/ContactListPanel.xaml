@@ -16,7 +16,7 @@
              FontFamily="{DynamicResource MaterialDesignFont}"
              >
     <materialDesign:Card
-    materialDesign:ShadowAssist.ShadowDepth="Depth2" Background="#FFE4E4E4"
+    materialDesign:ShadowAssist.ShadowDepth="Depth2" Background="#F0F4F8"
     >
         <DockPanel>
             <StackPanel Margin="0,0,0,10">
@@ -26,14 +26,14 @@
                         <ColumnDefinition Width="1*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Border  Grid.Column="1"  CornerRadius="15" BorderBrush="Gray" Background="White" BorderThickness="2" DockPanel.Dock="Top" Width="150" Height="40" >
+                    <Border  Grid.Column="1"  CornerRadius="15" BorderBrush="Gray" Background="White" BorderThickness="2" DockPanel.Dock="Top" Height="40" Margin="27,5,8,5" >
                         <Button
                 
                          Name="Btadd"
                          Click="Btadd_Click"
                          ToolTip="MaterialDesignFlatButton"
                          Height="35" 
-                         Background="{x:Null}" Margin="8,0,7,0" VerticalAlignment="Bottom" BorderBrush="#00000000"
+                         Background="{x:Null}" Margin="0,0,5,0" VerticalAlignment="Bottom" BorderBrush="#00000000" HorizontalAlignment="Right" Width="119"
                             >
                             <WrapPanel>
                                 <materialDesign:PackIcon Kind="Plus"  Width="auto" Height="auto" Foreground="#DD263CCB" />
@@ -48,7 +48,6 @@
 
                 <ScrollViewer Height="414">
                     <ListView x:Name="lvContact" Width="335" Height="auto"  Background="White"  >
-
                         <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -63,7 +62,7 @@
                                     </Grid.RowDefinitions>
 
                                     <Image Name="ico" Grid.Column="0" Grid.RowSpan="2" Width="50" Height="50"
-                                   Source="/img/userico.png"
+                                   Source="/img/user2.PNG"
                                    />
                                     <TextBlock x:Name="Username" 
                                    Text="{Binding Username}"
@@ -73,7 +72,7 @@
                                    Width="auto"
                                    Height="auto" 
                                    Background="{x:Null}" 
-                                   Foreground="#DD000000" FontWeight="Bold" FontSize="16"
+                                   Foreground="#DD000000" FontWeight="Normal" FontSize="16"
                               >
                                     </TextBlock>
 
@@ -81,15 +80,7 @@
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                        <ListView.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}" ></TextBlock>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListView.GroupStyle>
+              
                     </ListView>
                 </ScrollViewer>
 

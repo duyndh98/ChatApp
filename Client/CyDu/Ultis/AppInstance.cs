@@ -13,6 +13,7 @@ namespace CyDu.Ultis
         private static  User _user;
         //private static long _lastTimespan;
         private static List<Conversation> _conversationList;
+        private static List<Contact> _contactsList;
         private static Dictionary<long, string> _dirFullname;
         public static AppInstance getInstance()
         {
@@ -53,6 +54,16 @@ namespace CyDu.Ultis
             return _conversationList;
         }
 
+        public List<Contact> GetContacts()
+        {
+            return _contactsList;
+        }
+
+        public void SetContacts(List<Contact> _list)
+        {
+            _contactsList = _list;
+        }
+
         public void SetFullname(long id,string name)
         {
             if (!   _dirFullname.ContainsKey(id))
@@ -67,6 +78,8 @@ namespace CyDu.Ultis
         {
             return _dirFullname[id];
         }
+
+
         //public long GetLastTimespan()
         //{
         //    return _lastTimespan;

@@ -31,26 +31,50 @@ namespace CyDu.Windown
         public ObservableCollection<ConversationsView> History { get; set; }
         public event EventHandler HistoryEventHandler;
         private BackgroundWorker ConversationWorker;
+        private String SearchText;
+        
 
         public HistoryWindown(ObservableCollection<ConversationsView> _listhistory)
         {
-            InitializeComponent();
+            SearchText = "";
             History = _listhistory;
+            InitializeComponent();
+            this.DataContext = this;
             lvHistory.ItemsSource = History;
 
             ConversationWorker = new BackgroundWorker();
             ConversationWorker.DoWork += ConversationWorker_DoWork;
             ConversationWorker.RunWorkerCompleted += ConversationWorker_RunWorkerCompleted;
-            ConversationWorker.RunWorkerAsync(2000);
+            ConversationWorker.RunWorkerAsync(6000);
         }
 
         private void ConversationWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ObservableCollection<ConversationsView> conversationviews = e.Result as ObservableCollection<ConversationsView>;
-            History = conversationviews;
-            lvHistory.ItemsSource = History;
-            ConversationWorker.RunWorkerAsync(2000);
+          
+            bool check = true;
+            if (conversationviews.Count == History.Count)
+            {
+                foreach (var i in conversationviews)
+                {
+                   ConversationsView cv = History.Where(x => x.Text == i.Text).FirstOrDefault();
+                    if (cv ==null)
+                    {
+                        check = false;
+                        break;
+                    }
+                }
+            }
+            else
+                check = false;
+            
+            if (!check && !SearchText.Equals("")) // và ko phải là đang search
+            {
+                History = conversationviews;
+                lvHistory.ItemsSource = History;
+            }
 
+            ConversationWorker.RunWorkerAsync(6000);
 
         }
 
@@ -66,7 +90,6 @@ namespace CyDu.Windown
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
                 HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Conversations", HttpCompletionOption.ResponseContentRead).Result;
-                //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
                 ConversationList =  response.Content.ReadAsAsync<List<Conversation>>().Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -76,54 +99,28 @@ namespace CyDu.Windown
 
             foreach (Conversation conver in ConversationList)
             {
-                List<long> userIds = new List<long>();
-                string user = "";
-                long conversationId = conver.Id;
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(url);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                    HttpResponseMessage response = client.GetAsync("/api/Conversations/Members?id=" + conversationId, HttpCompletionOption.ResponseContentRead).Result;
-                    //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
-                    List<User> users = response.Content.ReadAsAsync<List<User>>().Result;
-                    foreach (User Conv_users in users)
-                    {
-                        if (Conv_users.Id != AppInstance.getInstance().GetUser().Id)
-                            userIds.Add(Conv_users.Id);
-                    }
-                }
-
-                foreach (long id in userIds)
-                {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        client.BaseAddress = new Uri(url);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                        HttpResponseMessage response = client.GetAsync("/api/Users/" + id, HttpCompletionOption.ResponseContentRead).Result;
-                        User users = response.Content.ReadAsAsync<User>().Result;
-                        user += users.Username + " ";
-                        AppInstance.getInstance().SetFullname(users.Id, users.FullName);
-                    }
-                }
-                if (user.Length > 20)
-                {
-                    user = user.Substring(0, 17) + "...";
-                }
 
                 conversationsViewsList.Add(new ConversationsView()
                 {
                     Pk_seq = conver.Id,
-                    Username = user
+                    Text = conver.Name
                 }); ;
             }
             e.Result = conversationsViewsList;
         }
 
-
+        public void ApplySearching(string searchText)
+        {
+            ObservableCollection<ConversationsView> result = new ObservableCollection<ConversationsView>();
+            foreach (var item in History)
+            {
+                if (item.Text.Contains(searchText))
+                {
+                    result.Add(item);
+                }
+            }
+            lvHistory.ItemsSource = result;
+        }
         public void Refresh()
         {
 
@@ -145,7 +142,7 @@ namespace CyDu.Windown
                 {
                     itemIndex = lv.SelectedIndex,
                     pk_seq = History.ElementAt(lv.SelectedIndex).Pk_seq,
-                    username = History.ElementAt(lv.SelectedIndex).Username
+                    text = History.ElementAt(lv.SelectedIndex).Text
                 });
             }
             catch (ArgumentOutOfRangeException)
@@ -166,6 +163,6 @@ namespace CyDu.Windown
     {
         public int itemIndex { get; set; }
         public long pk_seq { get; set; }
-        public string username { get; set; }
+        public string text { get; set; }
     }
 }

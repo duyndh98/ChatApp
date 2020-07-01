@@ -1,6 +1,7 @@
 ﻿using CyDu.Model;
 using CyDu.Ultis;
 using CyDu.Windown;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,28 @@ namespace CyDu
     /// </summary>
     public partial class LoginWindown : Window
     {
+
+
         public LoginWindown()
         {
             InitializeComponent();
+            ReadSavedUser();
+        }
+
+        private void ReadSavedUser()
+        {
+          
+           
+        }
+
+        private void WritePassword()
+        {
+           
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-
+            WritePassword();
             LoginAsync().Wait();
             if (AppInstance.getInstance().GetUser().Id != 0)
             {
@@ -51,7 +66,7 @@ namespace CyDu
         {
             string username = usernameBox.Text;
             string pass = PasswordBox.Password;
-            LoginUser userLogin = new LoginUser() { username = username, password = pass };
+            LoginUser userLogin = new LoginUser() { Username = username, Password = pass };
 
             string url = Ultils.getUrl();
             using (HttpClient client = new HttpClient())

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CyDu.Model;
 using CyDu.Ultis;
+using CyDu.ViewModel;
 
 namespace CyDu.Dialogs
 {
@@ -23,9 +25,24 @@ namespace CyDu.Dialogs
     /// </summary>
     public partial class AddChatDialog : Window
     {
+        ObservableCollection<ContactListItem> Contacts;
+
         public AddChatDialog()
         {
             InitializeComponent();
+            Contacts = new ObservableCollection<ContactListItem>();
+            List<Contact> contacts = AppInstance.getInstance().GetContacts();
+            foreach (Contact contact in contacts)
+            {
+                Contacts.Add(new ContactListItem()
+                {
+                    UserId = contact.ToUserId,
+                    Status = contact.Status,
+                    Username = AppInstance.getInstance().GetFullname(contact.ToUserId),
+                    IsSelected = false
+                }); ; ;
+            }
+            lvContact.ItemsSource = Contacts;
         }
 
         private void btcancel_Click(object sender, RoutedEventArgs e)
@@ -40,13 +57,13 @@ namespace CyDu.Dialogs
 
         private async void AddConversationWithOtherUser()
         {
-
-            string id = tbInput.Text;
+            ContactListItem item = lvContact.SelectedItem as ContactListItem;
+            string id = item.UserId.ToString();
             if (id.Equals(""))
             {
                 return;
             }
-            string name = "Conversation with " + id;
+            string name ="Conversation with "+ AppInstance.getInstance().GetFullname(long.Parse(id));
 
             ConversationWithOther conver = new ConversationWithOther();
             conver.Name = name;
@@ -71,5 +88,7 @@ namespace CyDu.Dialogs
                 }
             }
         }
+
+      
     }
 }

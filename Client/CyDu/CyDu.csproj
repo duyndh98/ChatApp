@@ -72,10 +72,17 @@
     <Compile Include="Dialogs\AddChatDialog.xaml.cs">
       <DependentUpon>AddChatDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\AddNewContactDialog.xaml.cs">
+      <DependentUpon>AddNewContactDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AddUserToChatDialog.xaml.cs">
       <DependentUpon>AddUserToChatDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ConversationMembersDialog.xaml.cs">
+      <DependentUpon>ConversationMembersDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\404Mess.cs" />
+    <Compile Include="Model\Contact.cs" />
     <Compile Include="Model\Conversation.cs" />
     <Compile Include="Model\ConversationWithOther.cs" />
     <Compile Include="Model\LoginUser.cs" />
@@ -85,6 +92,9 @@
     <Compile Include="Model\MessageWithTimespan.cs" />
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Panel\MessageImageBox.xaml.cs">
+      <DependentUpon>MessageImageBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Panel\UserInfoPopup.xaml.cs">
       <DependentUpon>UserInfoPopup.xaml</DependentUpon>
     </Compile>
@@ -106,6 +116,9 @@
     <Compile Include="Panel\HistoryPanel.xaml.cs">
       <DependentUpon>HistoryPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windown\ImageWindown.xaml.cs">
+      <DependentUpon>ImageWindown.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windown\MainChatWindown.xaml.cs">
       <DependentUpon>MainChatWindown.xaml</DependentUpon>
     </Compile>
@@ -122,7 +135,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddNewContactDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddUserToChatDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ConversationMembersDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panel\MessageImageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Panel\HistoryPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windown\ImageWindown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

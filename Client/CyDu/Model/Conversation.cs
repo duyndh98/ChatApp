@@ -15,4 +15,10 @@ namespace CyDu.Model
         [JsonProperty("name")]
         public string Name { get; set; }
     }
+
+    public class Conversation2
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
 }

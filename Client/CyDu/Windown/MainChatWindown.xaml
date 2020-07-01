@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CyDu.Windown"
         mc:Ignorable="d"
-        Title="mainchat" Height="675" Width="1012"
+        Title="CyDu" Height="675" Width="1012"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" IsTabStop="True"
         xmlns:uc ="clr:namespace:CyDU"
         >

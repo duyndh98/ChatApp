@@ -1,45 +1,29 @@
-﻿<UserControl x:Class="CyDu.Windown.ChattingPanel"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CyDu.Windown"
-             mc:Ignorable="d" 
-             d:DesignHeight="675" d:DesignWidth="674"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             TextElement.FontWeight="Regular"
-             TextElement.FontSize="13"
-             TextOptions.TextFormattingMode="Ideal"
-             TextOptions.TextRenderingMode="Auto"
-             FontFamily="{DynamicResource MaterialDesignFont}"
-             x:Name="chattingpanel"
- >
-
-    <Grid >
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:CyDu.Windown" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CyDu.Windown.ChattingPanel" mc:Ignorable="d" d:DesignHeight="675" d:DesignWidth="674" TextElement.Foreground="{DynamicResource MaterialDesignBody}" TextElement.FontWeight="Regular" TextElement.FontSize="13" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" FontFamily="{DynamicResource MaterialDesignFont}" x:Name="chattingpanel">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="7*"></RowDefinition>
-            <RowDefinition Height="1.5*"></RowDefinition>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="7*" />
+            <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-            <WrapPanel Name="panelInfo" Margin="0" >
-                <Grid.Row>0</Grid.Row>
+        <WrapPanel Name="panelInfo" Margin="0">
+            <Grid.Row>0</Grid.Row>
             <Border Background="GhostWhite" BorderBrush="#FFD6D6D6" BorderThickness="0.5">
                 <Grid x:Name="grid" Height="72" Width="675" Background="#F0F4F8">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"></RowDefinition>
-                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7*"></ColumnDefinition>
-                        <ColumnDefinition Width="1*"></ColumnDefinition>
-                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="7*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Label Content="{Binding Path=ChatPannelTitle}" Name="Titlelable" FontSize="18" Foreground="#DD000000" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>0</Grid.Column>
                     </Label>
-
                     <!--<Button Height="Auto" Background="#00673AB7" BorderBrush="#00673AB7" Margin="0,10,0,0">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>1</Grid.Column>
@@ -54,54 +38,45 @@
                         </Canvas>
                     </Button>-->
 
-                    <Button Name="btAddMem" Click="btAddMem_Click" Height="Auto" Background="#00673AB7" Margin="0,10,5,0" BorderBrush="#00673AB7">
+                    <Button x:Name="btMemList" Click="btMemList_Click"  Height="Auto" Background="#00673AB7" Margin="5" BorderBrush="#00673AB7"  >
                         <Grid.RowSpan>2</Grid.RowSpan>
-                        <Grid.Column>2</Grid.Column>
-                        <Canvas>
-                            <materialDesign:PackIcon Kind="AccountMultiplePlus" Height="35" 
-                                         Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-30" Canvas.Top="-25" >
+                        <Grid.Column>1</Grid.Column>
+                        <Canvas Margin="8,10,0,0">
+                            <materialDesign:PackIcon Kind="FormatListCheckbox" Height="35" Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-30" Canvas.Top="-25" Margin="9,0,0,0">
                                 <materialDesign:PackIcon.Background>
-                                    <ImageBrush/>
+                                    <ImageBrush />
                                 </materialDesign:PackIcon.Background>
                             </materialDesign:PackIcon>
-                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30"/>
+                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Canvas>
+                    </Button>
+                    
+                    <Button Name="btAddMem" Click="btAddMem_Click" Height="Auto" Background="#00673AB7" Margin="5,5,12,5" BorderBrush="#00673AB7">
+                        <Grid.RowSpan>2</Grid.RowSpan>
+                        <Grid.Column>3</Grid.Column>
+                        <Canvas Margin="8,10,0,0">
+                            <materialDesign:PackIcon Kind="AccountMultiplePlus" Height="35" Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-30" Canvas.Top="-25" Margin="9,0,0,0">
+                                <materialDesign:PackIcon.Background>
+                                    <ImageBrush />
+                                </materialDesign:PackIcon.Background>
+                            </materialDesign:PackIcon>
+                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Canvas>
                     </Button>
                 </Grid>
             </Border>
-            
-            </WrapPanel>
-        <ScrollViewer  x:Name="mainScroll" Height="480">
+        </WrapPanel>
+        <ScrollViewer x:Name="mainScroll" Height="480">
             <Grid.Row>1</Grid.Row>
-            <WrapPanel Name="mainPanel" >
-
-            </WrapPanel>
+            <WrapPanel Name="mainPanel" />
         </ScrollViewer>
-       
-        
-        <WrapPanel Name="Input" Height="61" VerticalAlignment="Bottom" Margin="0,12,0,10" >
+        <WrapPanel Name="Input" Height="61" VerticalAlignment="Bottom" Margin="0,12,0,10">
             <Grid.Row>2</Grid.Row>
-            <TextBox
-                x:Name="messTextbox"
-                AcceptsReturn="False"
-                KeyDown="TextBox_KeyDown"
-                Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Center"
-                Height="57"
-                Width="418"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto"
-                materialDesign:HintAssist.Hint="Nhập tin nhắn" Background="#7FDCDADA" CaretBrush="#FF2A5BDC" Foreground="#E5000000" Margin="20,2,0,2"
-              />
-            <Button
-              Style="{StaticResource MaterialDesignFloatingActionButton}"
-              ToolTip="MaterialDesignFloatingActionButton" Margin="20,0,0,0" Width="45" Height="45" Background="#FF11A0E2">
-                <materialDesign:PackIcon
-                Kind="FileImage"
-                Height="24"
-                Width="24" />
+            <TextBox x:Name="messTextbox" AcceptsReturn="False" KeyDown="TextBox_KeyDown" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="57" Width="418" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" materialDesign:HintAssist.Hint="Type your message" Background="#7FDCDADA" CaretBrush="#FF2A5BDC" Foreground="#E5000000" Margin="20,2,0,2" />
+            <Button x:Name="sendImagebtn" Click="sendImagebtn_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="20,0,0,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
+                <materialDesign:PackIcon Kind="FileImage" Height="24" Width="24" />
             </Button>
+            <Image Height="100" Width="100" Name="img"/>
         </WrapPanel>
     </Grid>
 </UserControl>
