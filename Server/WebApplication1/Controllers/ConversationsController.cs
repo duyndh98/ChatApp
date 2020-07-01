@@ -223,7 +223,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("WithMembers")]
-        public IActionResult PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
+        public ActionResult<ConversationViewModel> PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
         {
             try
             {
@@ -267,8 +267,9 @@ namespace WebApplication1.Controllers
                         UserId = user.Id
                     });
                 }
-            
-                return Ok();
+
+                var conversationView = _mapper.Map<ConversationViewModel>(createdConversation);
+                return Ok(conversationView);
             }
             catch (Exception ex)
             {
