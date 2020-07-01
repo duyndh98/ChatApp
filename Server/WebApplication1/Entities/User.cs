@@ -17,6 +17,8 @@ namespace WebApplication1.Entities
         public byte[] PasswordSalt { get; set; }
         public string Role { get; set; }
 
+        public string Avatar { get; set; }
+
         public virtual ICollection<ConversationUser> ConversationUsers { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }

@@ -154,6 +154,10 @@ namespace WebApplication1.Services
             if (!string.IsNullOrEmpty(user.FullName))
                 updatedUser.FullName = user.FullName;
 
+            // Update Avatar
+            if (!string.IsNullOrEmpty(user.Avatar))
+                updatedUser.Avatar = user.Avatar;
+
             // Update Password
             if (!string.IsNullOrEmpty(password))
             {
