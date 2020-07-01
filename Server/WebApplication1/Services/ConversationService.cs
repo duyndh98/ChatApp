@@ -20,6 +20,7 @@ namespace WebApplication1.Services
 
         IEnumerable<Message> GetMessages(int id);
         Tuple<long, IEnumerable<Message>> GetNewMessages(int id, long lastTimeSpan);
+        Message GetLastMessage(int id);
 
         bool Check2MembersAlreadyInConversation(User user1, User user2);
     }
@@ -125,6 +126,27 @@ namespace WebApplication1.Services
             lastTimeSpan = Utils.DateTimeToInt64(lastTime);
 
             return new Tuple<long, IEnumerable<Message>>(lastTimeSpan, filtedMessages);
+        }
+
+        public Message GetLastMessage(int id)
+        {
+            var messages = GetMessages(id);
+            if (messages == null || messages.Count() == 0)
+                throw new Exception("Conversation has no message");
+
+            Message lastMessage = null;
+            long lastTimeSpan = 0;
+            foreach (var message in messages)
+            {
+                var messageTimeSpan = Utils.DateTimeToInt64(message.ArrivalTime);
+                if (messageTimeSpan > lastTimeSpan)
+                {
+                    lastMessage = message;
+                    lastTimeSpan = messageTimeSpan;
+                }
+            }
+
+            return lastMessage;
         }
 
         public bool Check2MembersAlreadyInConversation(User user1, User user2)

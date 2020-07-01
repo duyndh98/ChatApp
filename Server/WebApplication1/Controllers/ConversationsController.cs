@@ -222,8 +222,23 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpGet("Messages/Last")]
+        public IActionResult GetLastMessage(int id)
+        {
+            try
+            {
+                var lastMessage = _conversationService.GetLastMessage(id);
+                var messageView = _mapper.Map<MessageViewModel>(lastMessage);
+                return Ok(messageView);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPost("WithMembers")]
-        public ActionResult<ConversationViewModel> PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
+        public ActionResult PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
         {
             try
             {
