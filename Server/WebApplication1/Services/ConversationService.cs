@@ -23,6 +23,8 @@ namespace WebApplication1.Services
         Message GetLastMessage(int id);
 
         bool Check2MembersAlreadyInConversation(User user1, User user2);
+
+        void UpdateHostMember(int id, int userId);
     }
 
     public class ConversationService : IConversationService
@@ -162,6 +164,24 @@ namespace WebApplication1.Services
             }
 
             return false;
+        }
+
+        public void UpdateHostMember(int id, int userId)
+        {
+            // Find
+            var conversation = _context.Conversations.Find(id);
+            if (conversation == null)
+                throw new Exception("Conversation not found");
+
+            if (!conversation.ConversationUsers.Select(x => x.UserId).Contains(userId))
+                throw new Exception("Member not found");
+
+            // Update hosted user
+            conversation.HostUserId = userId;
+            
+            // Update
+            _context.Conversations.Update(conversation);
+            _context.SaveChanges();
         }
     }
 }

@@ -29,12 +29,6 @@ namespace WebApplication1.Data
             modelBuilder.Entity<ConversationUser>().HasKey(x => new { x.ConversationId, x.UserId });
 
             modelBuilder.Entity<Contact>().HasKey(x => new { x.FromUserId, x.ToUserId });
-
-            //modelBuilder.Entity<User>().HasMany(x => x.FromContacts).WithOne();
-            //modelBuilder.Entity<User>().HasMany(x => x.ToContacts).WithOne();
-
-            //modelBuilder.Entity<Contact>().HasOne(x => x.FromUser).WithMany();
-            //modelBuilder.Entity<Contact>().HasOne(x => x.ToUser).WithMany();
         }
     }
 }

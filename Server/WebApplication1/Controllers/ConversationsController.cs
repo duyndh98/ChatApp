@@ -105,6 +105,9 @@ namespace WebApplication1.Controllers
                 // Map model to entity
                 var conversation = _mapper.Map<Conversation>(model);
 
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                conversation.HostUserId = currentUserId;
+
                 // Create
                 var createdConversation = _conversationService.Create(conversation);
 
@@ -112,7 +115,7 @@ namespace WebApplication1.Controllers
                 _conversationUserService.Create(new ConversationUser()
                 {
                     ConversationId = createdConversation.Id,
-                    UserId = Auth.GetUserIdFromClaims(this)
+                    UserId = currentUserId
                 });
 
                 return Ok();
@@ -268,7 +271,8 @@ namespace WebApplication1.Controllers
                 // Map model to entity
                 var conversation = new Conversation()
                 {
-                    Name = model.Name
+                    Name = model.Name,
+                    HostUserId = model.UserIds.First()
                 };
 
                 // Create
@@ -285,6 +289,31 @@ namespace WebApplication1.Controllers
 
                 var conversationView = _mapper.Map<ConversationViewModel>(createdConversation);
                 return Ok(conversationView);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // PUT: api/Conversations/5
+        [HttpPut("HostMember/{id}")]
+        public IActionResult PutConversationHostMember(int id, int userId)
+        {
+            try
+            {
+                // Get current host
+                var hostUserId = _conversationService.GetById(id).HostUserId;
+                
+                // Check if current user is host
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+
+                if (hostUserId != currentUserId)
+                    throw new Exception("Have no right to edit host");                
+
+                // Update
+                _conversationService.UpdateHostMember(id, userId);
+                return Ok();
             }
             catch (Exception ex)
             {
