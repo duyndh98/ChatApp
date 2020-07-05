@@ -168,6 +168,11 @@ namespace WebApplication1.Controllers
                 // Map model to entity
                 var member = _mapper.Map<ConversationUser>(model);
 
+                var conversation = _conversationService.GetById(model.ConversationId);
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                if (currentUserId != conversation.HostUserId)
+                    throw new Exception("Have no right");
+                    
                 _conversationUserService.Delete(member);
                 return Ok();
             }
@@ -309,7 +314,7 @@ namespace WebApplication1.Controllers
                 var currentUserId = Auth.GetUserIdFromClaims(this);
 
                 if (hostUserId != currentUserId)
-                    throw new Exception("Have no right to edit host");                
+                    throw new Exception("Have no right");                
 
                 // Update
                 _conversationService.UpdateHostMember(id, userId);
