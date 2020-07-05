@@ -238,7 +238,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost("WithMembers")]
-        public ActionResult PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
+        public IActionResult PostConversationWithMembers([FromBody]ConversationCreationWithMemberModel model)
         {
             try
             {

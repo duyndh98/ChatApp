@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using WebApplication1.Hubs;
 
 namespace WebApplication1
 {
@@ -90,6 +91,9 @@ namespace WebApplication1
 
             // Swagger
             services.AddSwaggerDocumentation();
+
+            // SignalR
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +109,7 @@ namespace WebApplication1
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             // global cors policy
             app.UseCors(x => x
                 .AllowAnyOrigin()
@@ -118,6 +122,8 @@ namespace WebApplication1
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }
