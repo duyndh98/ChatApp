@@ -22,15 +22,21 @@ namespace WebApplication1.Controllers
     public class MessagesController : ControllerBase
     {
         private IMessageService _messageService;
+        private IUserService _userService;
+        private IConversationService _conversationService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public MessagesController(
               IMessageService messageService,
+              IUserService userService,
+              IConversationService conversationService,
               IMapper mapper,
               IOptions<AppSettings> appSettings)
         {
             _messageService = messageService;
+            _userService = userService;
+            _conversationService = conversationService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -118,6 +124,15 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                var message = _messageService.GetById(id);
+                var conversation = _conversationService.GetById(message.ConversationId);
+
+                // Check if current user is admin or conversation host
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var currentUser = _userService.GetById(currentUserId);
+                if (currentUser.Role != Role.Admin && currentUserId != conversation.HostUserId && currentUserId != message.SenderId)
+                    throw new Exception("Have no right");
+
                 _messageService.Delete(id);
                 return Ok();
             }
