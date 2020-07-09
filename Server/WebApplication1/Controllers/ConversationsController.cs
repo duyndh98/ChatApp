@@ -160,19 +160,31 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [HttpDelete("Members")]
-        public IActionResult DeleteMember([FromBody]ConversationUserModel model)
+        [HttpDelete("Members/{id}/{userId}")]
+        public IActionResult DeleteMember(int id, int userId)
         {
             try
             {
                 // Map model to entity
-                var member = _mapper.Map<ConversationUser>(model);
+                var member = _mapper.Map<ConversationUser>(new ConversationUserModel()
+                {
+                    ConversationId = id,
+                    UserId = userId
+                });;
 
-                var conversation = _conversationService.GetById(model.ConversationId);
+                var conversation = _conversationService.GetById(id);
                 var currentUserId = Auth.GetUserIdFromClaims(this);
                 if (currentUserId != conversation.HostUserId)
                     throw new Exception("Have no right");
+
+                // Delete messages
+                var messageIds = _conversationService.GetMessages(id).Where(x => x.SenderId == userId).Select(x => x.Id).ToList();
+                foreach (var messageId in messageIds)
+                {
+                    _messageService.Delete(messageId);
+                }
                     
+                // Delete member
                 _conversationUserService.Delete(member);
                 return Ok();
             }
