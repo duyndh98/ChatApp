@@ -127,12 +127,35 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE: api/Conversations/5
-        [Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult DeleteConversation(int id)
         {
             try
             {
+                // Get conversation
+                var conversation = _conversationService.GetById(id);
+
+                // Check if current user is admin or conversation host
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var currentUser = _userService.GetById(currentUserId);
+                if (currentUser.Role != Role.Admin && currentUserId != conversation.HostUserId)
+                    throw new Exception("Have no right");
+
+                // Delete messages
+                var messageIds = _conversationService.GetMessages(id).Select(x => x.Id).ToList();
+                foreach (var messageId in messageIds)
+                {
+                    _messageService.Delete(messageId);
+                }
+
+                // Delete members
+                var members = _conversationService.GetConversationUsers(id).ToList();
+                foreach (var member in members)
+                {
+                    _conversationUserService.Delete(member);
+                }
+
+                // Delete conversation
                 _conversationService.Delete(id);
                 return Ok();
             }
@@ -170,11 +193,11 @@ namespace WebApplication1.Controllers
                 {
                     ConversationId = id,
                     UserId = userId
-                });;
+                });
 
                 var conversation = _conversationService.GetById(id);
                 var currentUserId = Auth.GetUserIdFromClaims(this);
-                if (currentUserId != conversation.HostUserId)
+                if (currentUserId != conversation.HostUserId && currentUserId != userId)
                     throw new Exception("Have no right");
 
                 // Delete messages
