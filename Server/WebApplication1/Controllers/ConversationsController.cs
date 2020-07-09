@@ -253,7 +253,8 @@ namespace WebApplication1.Controllers
                 var members = new List<User>();
 
                 // Add current member
-                model.UserIds.Add(Auth.GetUserIdFromClaims(this));
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                model.UserIds.Add(currentUserId);
 
                 if (model.UserIds.Count <= 1)
                     throw new Exception("Too few members");
@@ -277,7 +278,7 @@ namespace WebApplication1.Controllers
                 var conversation = new Conversation()
                 {
                     Name = model.Name,
-                    HostUserId = model.UserIds.First()
+                    HostUserId = currentUserId
                 };
 
                 // Create
