@@ -325,5 +325,49 @@ namespace WebApplication1.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("Seen/{id}")]
+        public IActionResult GetConversationUserSeens(int id)
+        {
+            try
+            {
+                var members = _conversationUserService.GetAll().Where(x => x.ConversationId == id).ToList();
+                var seenView = _mapper.Map<IList<ConversationSeenViewModel>>(members);
+                return Ok(seenView);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("Seen/{id}")]
+        public IActionResult PutConversationUserSeen(int id, [FromBody]ConversationSeenUpdateModel model)
+        {
+            try
+            {
+                // Check valid conversation
+                var conversation = _conversationService.GetById(id);
+
+                // Check valid message
+                var message = conversation.Messages.FirstOrDefault(x => x.Id == model.MessageId);
+                if (message == null)
+                    throw new Exception("Conversation not contains the message");
+
+                // Check valid member
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var member = _conversationService.GetConversationUsers(id).FirstOrDefault(x => x.UserId == currentUserId);
+                if (member == null)
+                    throw new Exception("User is not member of the conversation");
+
+                // Update
+                _conversationUserService.UpdateSeen(member, message);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

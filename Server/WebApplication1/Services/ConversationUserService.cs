@@ -12,6 +12,8 @@ namespace WebApplication1.Services
         IEnumerable<ConversationUser> GetAll();
         ConversationUser Create(ConversationUser conversationUser);
         void Delete(ConversationUser conversationUser);
+
+        void UpdateSeen(ConversationUser conversationUser, Message message);
     }
 
     public class ConversationUserService : IConversationUserService
@@ -58,6 +60,20 @@ namespace WebApplication1.Services
 
             // Delete
             _context.ConversationUsers.Remove(conversationUser);
+            _context.SaveChanges();
+        }
+
+        public void UpdateSeen(ConversationUser conversationUser, Message message)
+        {
+            // Check
+            if (conversationUser.ConversationId != message.ConversationId)
+                throw new Exception("Conversation is not match");
+
+            var updatedConversationUser = conversationUser;
+            updatedConversationUser.SeenMessageId = message.Id;
+
+            // Update
+            _context.ConversationUsers.Update(conversationUser);
             _context.SaveChanges();
         }
     }

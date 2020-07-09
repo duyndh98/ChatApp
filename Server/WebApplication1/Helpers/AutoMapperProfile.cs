@@ -22,12 +22,14 @@ namespace WebApplication1.Helpers
             CreateMap<ConversationUpdateModel, Conversation>();
             CreateMap<ConversationUserModel, ConversationUser>();
             CreateMap<ConversationUser, ConversationUserModel>();
+            CreateMap<ConversationUser, ConversationSeenViewModel>();
 
             CreateMap<MessageCreationModel, Message>();
             CreateMap<MessageUpdateModel, Message>();
             CreateMap<Message, MessageViewModel> ();
 
-            CreateMap<Contact, ContactViewModel>();            
+            CreateMap<Contact, ContactViewModel>();        
+                        
         }
     }
 }

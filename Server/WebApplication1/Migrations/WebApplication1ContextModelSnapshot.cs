@@ -61,6 +61,9 @@ namespace WebApplication1.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SeenMessageId")
+                        .HasColumnType("int");
+
                     b.HasKey("ConversationId", "UserId");
 
                     b.HasIndex("UserId");

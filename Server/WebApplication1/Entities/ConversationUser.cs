@@ -16,5 +16,7 @@ namespace WebApplication1.Entities
         [Key]
         public int ConversationId { get; set; }
         public virtual Conversation Conversation { get; set; }
+
+        public int SeenMessageId { get; set; }
     }
 }

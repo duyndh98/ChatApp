@@ -57,7 +57,8 @@ namespace WebApplication1.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false),
-                    ConversationId = table.Column<int>(nullable: false)
+                    ConversationId = table.Column<int>(nullable: false),
+                    SeenMessageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
