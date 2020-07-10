@@ -339,7 +339,7 @@ namespace WebApplication1.Controllers
 
         // PUT: api/Conversations/5
         [HttpPut("HostMember/{id}")]
-        public IActionResult PutConversationHostMember(int id, int userId)
+        public IActionResult PutConversationHostMember(int id, [FromBody]ConversationHostUpdateModel model)
         {
             try
             {
@@ -353,8 +353,11 @@ namespace WebApplication1.Controllers
                     throw new Exception("Have no right");                
 
                 // Update
-                _conversationService.UpdateHostMember(id, userId);
-                return Ok();
+                _conversationService.UpdateHostMember(id, model.UserId);
+
+                var updatedConversation = _conversationService.GetById(id);
+                var updatedConversationView = _mapper.Map<ConversationViewModel>(updatedConversation);
+                return Ok(updatedConversationView);
             }
             catch (Exception ex)
             {
