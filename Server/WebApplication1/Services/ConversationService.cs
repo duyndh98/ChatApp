@@ -22,7 +22,8 @@ namespace WebApplication1.Services
         Tuple<long, IEnumerable<Message>> GetNewMessages(int id, long lastTimeSpan);
         Message GetLastMessage(int id);
 
-        bool Check2MembersAlreadyInConversation(User user1, User user2);
+        //bool CheckMembersAlreadyInConversation(IEnumerable<User> users);
+        Conversation GetByMembers(IEnumerable<User> users);
 
         void UpdateHostMember(int id, int userId);
     }
@@ -151,19 +152,45 @@ namespace WebApplication1.Services
             return lastMessage;
         }
 
-        public bool Check2MembersAlreadyInConversation(User user1, User user2)
+        //public bool Check2MembersAlreadyInConversation(User user1, User user2)
+        //{
+        //    foreach (var conversation in _context.Conversations)
+        //    {
+        //        if (conversation.ConversationUsers.Count == 2)
+        //        {
+        //            var memberIds = conversation.ConversationUsers.Select(x => x.UserId);
+        //            if (memberIds.Contains(user1.Id) && memberIds.Contains(user2.Id))
+        //                return true;
+        //        }
+        //    }
+
+        //    return false;
+        //}
+
+        public Conversation GetByMembers(IEnumerable<User> users)
         {
-            foreach (var conversation in _context.Conversations)
+            var userIds = users.Select(x => x.Id);
+            var conversations = GetAll();
+            foreach (var conversation in conversations)
             {
-                if (conversation.ConversationUsers.Count == 2)
+                if (conversation.ConversationUsers.Count() == users.Count())
                 {
-                    var memberIds = conversation.ConversationUsers.Select(x => x.UserId);
-                    if (memberIds.Contains(user1.Id) && memberIds.Contains(user2.Id))
-                        return true;
+                    bool found = true;
+                    foreach (var member in conversation.ConversationUsers)
+                    {
+                        if (!userIds.Contains(member.UserId))
+                        {
+                            found = false;
+                            break;
+                        }
+                    }
+
+                    if (found)
+                        return conversation;
                 }
             }
 
-            return false;
+            return null;
         }
 
         public void UpdateHostMember(int id, int userId)

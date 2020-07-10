@@ -303,12 +303,12 @@ namespace WebApplication1.Controllers
                 }
 
                 // Check
-                if (members.Count == 2)
+                var foundConversation = _conversationService.GetByMembers(members);
+                if (foundConversation != null)
                 {
-                    if (_conversationService.Check2MembersAlreadyInConversation(members[0], members[1]))
-                        throw new Exception("Conversation already exist");
+                    return Conflict(_mapper.Map<ConversationViewModel>(foundConversation));
                 }
-
+            
                 // Map model to entity
                 var conversation = new Conversation()
                 {
