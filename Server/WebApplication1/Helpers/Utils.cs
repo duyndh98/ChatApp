@@ -19,7 +19,7 @@ namespace WebApplication1.Helpers
             return new DateTime(1970, 1, 1).AddMilliseconds(delta);
         }
 
-        public static void UploadData(string data, string code)
+        public static string GetDataDirectory()
         {
             // Build path
             var dataPath = Path.Combine(
@@ -29,8 +29,17 @@ namespace WebApplication1.Helpers
                 "Data"
             );
 
+
+            if (!Directory.Exists(dataPath))
+                Directory.CreateDirectory(dataPath);
+
+            return dataPath;
+        }
+
+        public static void UploadData(string data, string code)
+        {
             // Validate
-            var filePath = Path.Combine(dataPath, code);
+            var filePath = Path.Combine(GetDataDirectory(), code);
             if (File.Exists(filePath))
                 throw new Exception("File path already exist");
 
@@ -40,16 +49,8 @@ namespace WebApplication1.Helpers
 
         public static string DownloadData(string code)
         {
-            // Build path
-            var dataPath = Path.Combine(
-                Directory.GetParent(Directory.GetParent(
-                    Assembly.GetExecutingAssembly().Location
-                    ).FullName).FullName,
-                "Data"
-            );
-
             // Validate
-            var filePath = Path.Combine(dataPath, code);
+            var filePath = Path.Combine(GetDataDirectory(), code);
             if (!File.Exists(filePath))
                 throw new Exception("File path not found");
 
@@ -62,16 +63,8 @@ namespace WebApplication1.Helpers
 
         public static void DeleteData(string code)
         {
-            // Build path
-            var dataPath = Path.Combine(
-                Directory.GetParent(Directory.GetParent(
-                    Assembly.GetExecutingAssembly().Location
-                    ).FullName).FullName,
-                "Data"
-            );
-
             // Validate
-            var filePath = Path.Combine(dataPath, code);
+            var filePath = Path.Combine(GetDataDirectory(), code);
             if (!File.Exists(filePath))
                 throw new Exception("File path not found");
 
