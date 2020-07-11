@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
 using WebApplication1.Entities;
+using WebApplication1.Helpers;
 
 namespace WebApplication1.Services
 {
@@ -156,7 +157,12 @@ namespace WebApplication1.Services
 
             // Update Avatar
             if (!string.IsNullOrEmpty(user.Avatar))
+            {
+                //var guid = Utils.UploadImage(user.Avatar);
+                //updatedUser.Avatar = guid;
+
                 updatedUser.Avatar = user.Avatar;
+            }
 
             // Update Password
             if (!string.IsNullOrEmpty(password))
