@@ -55,6 +55,23 @@ namespace WebApplication1.Controllers
             }
         }
 
+        // GET: api/Contacts/5
+        [HttpGet("{id}")]
+        public IActionResult GetContact(int id)
+        {
+            try
+            {
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var contact = _contactService.GetById(currentUserId, id);
+                var model = _mapper.Map<ContactViewModel>(contact);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         // PUT: api/Contacts/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -63,18 +80,15 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                var contactUser = _userService.GetById(id);
-
-                var contact = new Contact()
-                {
-                    FromUserId = Auth.GetUserIdFromClaims(this),
-                    ToUserId = contactUser.Id,
-                    Status = model.Status
-                };
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var contact = _contactService.GetById(currentUserId, id);
+                contact.Status = model.Status;
                 
                 // Update
                 _contactService.Update(contact);
-                return Ok();
+
+                var updatedContact = _contactService.GetById(currentUserId, id);
+                return Ok(updatedContact);
             }
             catch (Exception ex)
             {
@@ -100,8 +114,9 @@ namespace WebApplication1.Controllers
                 };
 
                 // Create
-                _contactService.Create(contact);
-                return Ok();
+                var createdContact = _contactService.Create(contact);
+
+                return Ok(createdContact);
             }
             catch (Exception ex)
             {
@@ -110,19 +125,15 @@ namespace WebApplication1.Controllers
         }
 
         // DELETE: api/Contacts/5
+        [Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(int id)
         {
             try
             {
-                var contactUser = _userService.GetById(id);
-
-                var contact = new Contact()
-                {
-                    FromUserId = Auth.GetUserIdFromClaims(this),
-                    ToUserId = contactUser.Id,
-                };
-
+                var currentUserId = Auth.GetUserIdFromClaims(this);
+                var contact = _contactService.GetById(currentUserId, id);
+                
                 _contactService.Delete(contact);
                 return Ok();
             }

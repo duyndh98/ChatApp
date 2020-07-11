@@ -10,6 +10,7 @@ namespace WebApplication1.Services
     public interface IContactService
     {
         IEnumerable<Contact> GetAll();
+        Contact GetById(int id1, int id2);
         Contact Create(Contact contact);
         void Update(Contact contact);
         void Delete(Contact contact);
@@ -29,6 +30,18 @@ namespace WebApplication1.Services
         public IEnumerable<Contact> GetAll()
         {
             return _context.Contacts;
+        }
+
+        public Contact GetById(int id1, int id2)
+        {
+            var contact = _context.Contacts.SingleOrDefault(x =>
+                ((x.FromUserId == id1 && x.ToUserId == id2)
+                || (x.ToUserId == id1 && x.FromUserId == id2))
+                );
+            if (contact == null)
+                throw new Exception("Contact not found");
+
+            return contact;
         }
 
         public IEnumerable<Contact> GetContacts(int userId)
