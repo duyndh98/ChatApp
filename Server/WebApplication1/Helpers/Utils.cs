@@ -19,7 +19,7 @@ namespace WebApplication1.Helpers
             return new DateTime(1970, 1, 1).AddMilliseconds(delta);
         }
 
-        public static void UploadData(byte[] data, string code)
+        public static void UploadData(string data, string code)
         {
             // Build path
             var dataPath = Path.Combine(
@@ -35,10 +35,10 @@ namespace WebApplication1.Helpers
                 throw new Exception("File path already exist");
 
             // Write
-            File.WriteAllBytes(filePath, data);
+            File.WriteAllText(filePath, data);
         }
 
-        public static byte[] DownloadData(string code)
+        public static string DownloadData(string code)
         {
             // Build path
             var dataPath = Path.Combine(
@@ -54,7 +54,7 @@ namespace WebApplication1.Helpers
                 throw new Exception("File path not found");
 
             // Read
-            var data = File.ReadAllBytes(filePath);
+            var data = File.ReadAllText(filePath);
 
             // Return
             return data;

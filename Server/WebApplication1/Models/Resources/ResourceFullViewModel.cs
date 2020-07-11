@@ -16,6 +16,6 @@ namespace WebApplication1.Models
 
         public ResourceType Type { get; set; }
 
-        public byte[] Data { get; set; }
+        public string Data { get; set; }
     }
 }
