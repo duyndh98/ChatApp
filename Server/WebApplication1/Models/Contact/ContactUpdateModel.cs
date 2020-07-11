@@ -8,7 +8,6 @@ namespace WebApplication1.Models
 {
     public class ContactUpdateModel
     {
-        public int ToUserId { get; set; }
         public ContactStatus Status { get; set; }
     }
 }

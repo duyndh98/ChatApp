@@ -63,7 +63,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                var contactUser = _userService.GetById(model.ToUserId);
+                var contactUser = _userService.GetById(id);
 
                 var contact = new Contact()
                 {
