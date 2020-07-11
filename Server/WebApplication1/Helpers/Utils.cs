@@ -19,31 +19,64 @@ namespace WebApplication1.Helpers
             return new DateTime(1970, 1, 1).AddMilliseconds(delta);
         }
 
-        public static string UploadImage(string base64)
+        public static void UploadData(byte[] data, string code)
         {
             // Build path
             var dataPath = Path.Combine(
                 Directory.GetParent(Directory.GetParent(
                     Assembly.GetExecutingAssembly().Location
-                    ).FullName).FullName, 
+                    ).FullName).FullName,
                 "Data"
             );
-            var guid = Guid.NewGuid().ToString("B");
-            var filePath = Path.Combine(dataPath, guid);
+
+            // Validate
+            var filePath = Path.Combine(dataPath, code);
+            if (File.Exists(filePath))
+                throw new Exception("File path already exist");
 
             // Write
-            byte[] imgData = Convert.FromBase64String(base64);
-            File.WriteAllBytes(filePath, imgData);
-
-            // Return
-            return guid;
+            File.WriteAllBytes(filePath, data);
         }
 
-        public static string DownloadImage(string guid)
+        public static byte[] DownloadData(string code)
         {
-            var content = string.Empty;
+            // Build path
+            var dataPath = Path.Combine(
+                Directory.GetParent(Directory.GetParent(
+                    Assembly.GetExecutingAssembly().Location
+                    ).FullName).FullName,
+                "Data"
+            );
 
-            return content;
+            // Validate
+            var filePath = Path.Combine(dataPath, code);
+            if (!File.Exists(filePath))
+                throw new Exception("File path not found");
+
+            // Read
+            var data = File.ReadAllBytes(filePath);
+
+            // Return
+            return data;
+        }
+
+        public static void DeleteData(string code)
+        {
+            // Build path
+            var dataPath = Path.Combine(
+                Directory.GetParent(Directory.GetParent(
+                    Assembly.GetExecutingAssembly().Location
+                    ).FullName).FullName,
+                "Data"
+            );
+
+            // Validate
+            var filePath = Path.Combine(dataPath, code);
+            if (!File.Exists(filePath))
+                throw new Exception("File path not found");
+
+            // Delete
+            File.Delete(filePath);
         }
     }
 }

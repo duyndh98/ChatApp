@@ -28,8 +28,11 @@ namespace WebApplication1.Helpers
             CreateMap<MessageUpdateModel, Message>();
             CreateMap<Message, MessageViewModel> ();
 
-            CreateMap<Contact, ContactViewModel>();        
-                        
+            CreateMap<Contact, ContactViewModel>();
+
+            CreateMap<ResourceCreationModel, Resource>();
+            CreateMap<Resource, ResourceBasicViewModel>();
+            CreateMap<Resource, ResourceFullViewModel>();
         }
     }
 }

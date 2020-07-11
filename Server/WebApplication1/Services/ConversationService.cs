@@ -22,7 +22,6 @@ namespace WebApplication1.Services
         Tuple<long, IEnumerable<Message>> GetNewMessages(int id, long lastTimeSpan);
         Message GetLastMessage(int id);
 
-        //bool CheckMembersAlreadyInConversation(IEnumerable<User> users);
         Conversation GetByMembers(IEnumerable<User> users);
 
         void UpdateHostMember(int id, int userId);

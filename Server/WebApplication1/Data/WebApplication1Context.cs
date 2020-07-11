@@ -24,6 +24,8 @@ namespace WebApplication1.Data
 
         public DbSet<WebApplication1.Entities.Contact> Contacts { get; set; }
 
+        public DbSet<WebApplication1.Entities.Resource> Resources { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ConversationUser>().HasKey(x => new { x.ConversationId, x.UserId });
