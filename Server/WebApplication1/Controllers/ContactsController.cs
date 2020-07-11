@@ -111,11 +111,11 @@ namespace WebApplication1.Controllers
 
         // DELETE: api/Contacts/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteContact([FromBody]ContactDeletionModel model)
+        public IActionResult DeleteContact(int id)
         {
             try
             {
-                var contactUser = _userService.GetById(model.ToUserId);
+                var contactUser = _userService.GetById(id);
 
                 var contact = new Contact()
                 {
