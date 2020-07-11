@@ -10,6 +10,6 @@ namespace WebApplication1.Models
         public string Username { get; set; }
         public string FullName { get; set; }
         public string Password { get; set; }
-        public string Avatar { get; set; }
+        public int Avatar { get; set; }
     }
 }

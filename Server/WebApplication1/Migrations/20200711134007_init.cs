@@ -60,7 +60,7 @@ namespace WebApplication1.Migrations
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true),
                     Role = table.Column<string>(nullable: true),
-                    Avatar = table.Column<string>(nullable: true)
+                    Avatar = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

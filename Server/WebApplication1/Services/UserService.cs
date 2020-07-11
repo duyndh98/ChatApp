@@ -156,12 +156,14 @@ namespace WebApplication1.Services
                 updatedUser.FullName = user.FullName;
 
             // Update Avatar
-            if (!string.IsNullOrEmpty(user.Avatar))
+            if (user.Avatar > 0)
             {
-                //var guid = Utils.UploadImage(user.Avatar);
-                //updatedUser.Avatar = guid;
+                var resource = _context.Resources.FirstOrDefault(x => x.Id == user.Avatar);
+                if (resource == null)
+                    throw new Exception("Resource not found");
 
                 updatedUser.Avatar = user.Avatar;
+
             }
 
             // Update Password
