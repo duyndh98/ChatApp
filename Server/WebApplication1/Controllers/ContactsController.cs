@@ -88,7 +88,7 @@ namespace WebApplication1.Controllers
                 _contactService.Update(contact);
 
                 var updatedContact = _contactService.GetById(currentUserId, id);
-                return Ok(updatedContact);
+                return Ok(_mapper.Map<ContactViewModel>(updatedContact));
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace WebApplication1.Controllers
                 // Create
                 var createdContact = _contactService.Create(contact);
 
-                return Ok(createdContact);
+                return Ok(_mapper.Map<ContactViewModel>(createdContact));
             }
             catch (Exception ex)
             {

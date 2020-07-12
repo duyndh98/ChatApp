@@ -10,7 +10,7 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(WebApplication1Context))]
-    [Migration("20200711134007_init")]
+    [Migration("20200712133354_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
