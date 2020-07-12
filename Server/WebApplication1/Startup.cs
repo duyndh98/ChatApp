@@ -125,6 +125,7 @@ namespace WebApplication1
                 endpoints.MapControllers();
 
                 endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<CallHub>("/callhub");
             });
         }
     }
