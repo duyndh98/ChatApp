@@ -20,10 +20,16 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="{Binding Path=ChatPannelTitle}" Name="Titlelable" FontSize="18" Foreground="#DD000000" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" >
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>0</Grid.Column>
-                    </Label>
+                        <Label Content="{Binding Path=ChatPannelTitle}" Name="Titlelable" FontSize="18" Foreground="#DD000000" FontWeight="Bold" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Height="70">
+                        </Label>
+                        <Button Style="{StaticResource MaterialDesignFloatingActionButton}" Name="editcsname" Click="editcsname_Click" ToolTip="Edit conversation name" Margin="20,0,0,0" Width="45" Height="45" Background="White" BorderBrush="White" Foreground="#DD000000">
+                            <materialDesign:PackIcon Kind="Pencil" Height="24" Width="24" />
+                        </Button>
+                    </StackPanel>
+                  
                     <!--<Button Height="Auto" Background="#00673AB7" BorderBrush="#00673AB7" Margin="0,10,0,0">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>1</Grid.Column>
@@ -37,32 +43,20 @@
                             <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30"/>
                         </Canvas>
                     </Button>-->
-
-                    <Button x:Name="btMemList" Click="btMemList_Click"  Height="Auto" Background="#00673AB7" Margin="5" BorderBrush="#00673AB7"  >
+                    <Button x:Name="btMemList" Click="btMemList_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="10,0,0,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>1</Grid.Column>
-                        <Canvas Margin="8,10,0,0">
-                            <materialDesign:PackIcon Kind="FormatListCheckbox" Height="35" Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-30" Canvas.Top="-25" Margin="9,0,0,0">
-                                <materialDesign:PackIcon.Background>
-                                    <ImageBrush />
-                                </materialDesign:PackIcon.Background>
-                            </materialDesign:PackIcon>
-                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        </Canvas>
+                        <materialDesign:PackIcon Kind="FormatListCheckbox" Height="24" Width="24" />
                     </Button>
-                    
-                    <Button Name="btAddMem" Click="btAddMem_Click" Height="Auto" Background="#00673AB7" Margin="5,5,12,5" BorderBrush="#00673AB7">
+                    <Button x:Name="btAddMem" Click="btAddMem_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="0,0,10,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>3</Grid.Column>
-                        <Canvas Margin="8,10,0,0">
-                            <materialDesign:PackIcon Kind="AccountMultiplePlus" Height="35" Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-30" Canvas.Top="-25" Margin="9,0,0,0">
-                                <materialDesign:PackIcon.Background>
-                                    <ImageBrush />
-                                </materialDesign:PackIcon.Background>
-                            </materialDesign:PackIcon>
-                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        </Canvas>
+                        <materialDesign:PackIcon Kind="AccountMultiplePlus" Height="24" Width="24" />
                     </Button>
+
+
+
+                  
                 </Grid>
             </Border>
         </WrapPanel>
@@ -76,7 +70,9 @@
             <Button x:Name="sendImagebtn" Click="sendImagebtn_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="20,0,0,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
                 <materialDesign:PackIcon Kind="FileImage" Height="24" Width="24" />
             </Button>
-            <Image Height="100" Width="100" Name="img"/>
+            <Button x:Name="sendbtn" Click="sendbtn_Click"  Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="20,0,0,0" Width="45" Height="45" Background="White" BorderBrush="White">
+                <materialDesign:PackIcon Kind="send" Height="24" Width="24" Foreground="#DD000000" />
+            </Button>
         </WrapPanel>
     </Grid>
 </UserControl>

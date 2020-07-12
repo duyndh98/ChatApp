@@ -34,12 +34,19 @@ namespace CyDu.Dialogs
             List<Contact> contacts = AppInstance.getInstance().GetContacts();
             foreach (Contact contact in contacts)
             {
+                long id = contact.FromUserId;
+                if (id == AppInstance.getInstance().GetUser().Id)
+                {
+                    id = contact.ToUserId;
+                }
                 Contacts.Add(new ContactListItem()
                 {
-                    UserId = contact.ToUserId,
+                    FromUserId = contact.FromUserId,
+                    ToUserId = contact.ToUserId,
                     Status = contact.Status,
-                    Username = AppInstance.getInstance().GetFullname(contact.ToUserId),
-                    IsSelected = false
+                    Username = AppInstance.getInstance().GetFullname(id),
+                    IsSelected = false,
+                    Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(id)
                 }); ; ;
             }
             lvContact.ItemsSource = Contacts;
@@ -58,16 +65,21 @@ namespace CyDu.Dialogs
         private async void AddConversationWithOtherUser()
         {
             ContactListItem item = lvContact.SelectedItem as ContactListItem;
-            string id = item.UserId.ToString();
-            if (id.Equals(""))
+
+            long id = item.FromUserId;
+            if (id==AppInstance.getInstance().GetUser().Id)
             {
-                return;
+                id = item.ToUserId;
             }
-            string name ="Conversation with "+ AppInstance.getInstance().GetFullname(long.Parse(id));
+            string name = "Conversation with " + AppInstance.getInstance().GetFullname(id);
+            if (!conversationnametb.Text.Equals(""))
+            {
+                name = conversationnametb.Text;
+            }
 
             ConversationWithOther conver = new ConversationWithOther();
             conver.Name = name;
-            conver.UserIds = new long[] { long.Parse(id) };
+            conver.UserIds = new long[] { id };
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(Ultils.getUrl());

@@ -37,12 +37,19 @@ namespace CyDu.Dialogs
             List<Contact> contacts = AppInstance.getInstance().GetContacts();
             foreach (Contact contact in contacts )
             {
+                long id = contact.FromUserId;
+                if (id == AppInstance.getInstance().GetUser().Id)
+                {
+                    id = contact.ToUserId;
+                }
                 Contacts.Add(new ContactListItem()
                 {
-                    UserId = contact.ToUserId,
+                    ToUserId = contact.ToUserId,
                     Status = contact.Status,
-                    Username = AppInstance.getInstance().GetFullname(contact.ToUserId),
-                    IsSelected = false
+                    FromUserId = contact.FromUserId,
+                    Username = AppInstance.getInstance().GetFullname(id),
+                    IsSelected = false,
+                    Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(id)
                 });; ;
             }
             lvContact.ItemsSource = Contacts;
@@ -54,10 +61,15 @@ namespace CyDu.Dialogs
             foreach (var item in lvContact.SelectedItems)
             {
                 ContactListItem contact = item as ContactListItem;
+                long userid = contact.ToUserId;
+                if (contact.ToUserId == AppInstance.getInstance().GetUser().Id) 
+                {
+                    userid = contact.FromUserId;
+                }
                 MemberConversation mem_conver = new MemberConversation()
                 {
                     ConversationId = ConversationId,
-                    UserId = contact.UserId
+                    UserId = userid
                 };
                 using (HttpClient client = new HttpClient())
                 {

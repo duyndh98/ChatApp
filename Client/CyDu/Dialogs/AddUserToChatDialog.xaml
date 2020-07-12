@@ -74,7 +74,7 @@
                             IsChecked="{Binding IsSelected , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="White" Width="25" Height="25" HorizontalAlignment="Center"
                             />-->
                             <Image Name="ico" Grid.Column="1" Grid.RowSpan="2" Width="50" Height="50"
-                                   Source="/img/user2.PNG" Margin="5,0"
+                                   Source="{Binding Avatar}" Margin="5,0"
                                    />
                             <TextBlock x:Name="Username" 
                                    Text="{Binding Username}"

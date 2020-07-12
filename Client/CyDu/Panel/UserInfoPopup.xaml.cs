@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CyDu.Model;
 using CyDu.Ultis;
 
 namespace CyDu.Panel
@@ -23,6 +26,7 @@ namespace CyDu.Panel
     {
 
         public event EventHandler LogoutEventhandler;
+        public event EventHandler UpdateIconEventhandler;
 
         public UserInfoPopup()
         {
@@ -35,6 +39,46 @@ namespace CyDu.Panel
         private void btlogout_Click(object sender, RoutedEventArgs e)
         {
             LogoutEventhandler(this, new EventArgs());
+        }
+
+        private void btUpdateAvatar_Click(object sender, RoutedEventArgs e)
+        {
+
+           string path = ImageSupportInstance.getInstance().OpenChooseImageDialogBox();
+            if (!path.Equals(""))
+            {
+               Resource res = ImageSupportInstance.getInstance().UploadImage(path,360,360);
+                User currentuser = AppInstance.getInstance().GetUser();
+                currentuser.Avatar = res.Id;
+                AppInstance.getInstance().SetUser(currentuser);
+
+                UserSignup user = new UserSignup()
+                {
+                    Avatar = currentuser.Avatar,
+                    FullName = currentuser.FullName,
+                    Password = null,
+                    Username = null
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    string url = Ultils.getUrl();
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.PutAsJsonAsync("/api/Users/Owner", user).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        UpdateIconEventhandler(this, new EventArgs());
+                    }
+                    else
+                    {
+                        _404Mess mess = response.Content.ReadAsAsync<_404Mess>().Result;
+                        System.Windows.MessageBox.Show(mess.Message);
+                    }
+                }
+            }
+            
         }
     }
 }

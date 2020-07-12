@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using CyDu.Ultis;
 using System.Net.Http.Headers;
 using CyDu.Model;
+using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 
 namespace CyDu.Dialogs
 {
@@ -23,12 +25,34 @@ namespace CyDu.Dialogs
     /// </summary>
     public partial class AddNewContactDialog : Window
     {
+        HubConnection connection;
         public AddNewContactDialog()
         {
             InitializeComponent();
+            SetupHubconnection();
+
         }
 
-        private void btOk_Click(object sender, RoutedEventArgs e)
+        private async void SetupHubconnection()
+        {
+            connection = new HubConnectionBuilder()
+              .WithUrl("https://localhost:44344/chathub")
+              .Build();
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+            try
+            {
+                await connection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+        private async  void btOk_Click(object sender, RoutedEventArgs e)
         {
             string username = tbInput.Text;
             long ToUserId = 0;
@@ -64,13 +88,31 @@ namespace CyDu.Dialogs
                     if (respone.IsSuccessStatusCode)
                     {
                         this.DialogResult = true;
+
+                        //send to hub
+                        contact = new Contact()
+                        {
+                            ToUserId = ToUserId,
+                            FromUserId = AppInstance.getInstance().GetUser().Id,
+                            Status = 0
+                        };
+                        string json = JsonConvert.SerializeObject(contact);
+                        try
+                        {
+                            await connection.InvokeAsync("SendMessage", "contact", json);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.MessageBox.Show(ex.Message);
+                        }
                     }
                     else
                     {
                         _404Mess mess = respone.Content.ReadAsAsync<_404Mess>().Result;
-                        errlb.Text = mess.Message;
+                        errlb.Text ="Request have been sent or already exist";
                     }
                 }
+
             }
            
         }

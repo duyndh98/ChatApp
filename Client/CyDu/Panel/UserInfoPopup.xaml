@@ -73,15 +73,22 @@
             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="80,0,0,0" FontSize="16"
             >
         </TextBlock>
-        <Button
+        <!--<Button
             Grid.Row="2"
             x:Name="btlogout"
             Click="btlogout_Click"
     Style="{StaticResource MaterialDesignOutlinedButton}"
     ToolTip="MaterialDesignOutlinedButton" Margin="80,44,51,14" Grid.RowSpan="2" Width="209">
             LOG OUT
+        </Button>-->
+        <Button
+            Grid.Row="2"
+            x:Name="btUpdateAvatar"
+            Click="btUpdateAvatar_Click"
+    Style="{StaticResource MaterialDesignOutlinedButton}"
+    ToolTip="MaterialDesignOutlinedButton" Margin="80,44,51,14" Grid.RowSpan="2" Width="209">
+            UPDATE AVATAR
         </Button>
-
     </Grid>
 
     <UserControl.Style>

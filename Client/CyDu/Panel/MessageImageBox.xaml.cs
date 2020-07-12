@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CyDu.Ultis;
 using CyDu.Windown;
 
 namespace CyDu.Panel
@@ -25,12 +26,12 @@ namespace CyDu.Panel
         public enum Side { User, Other }
         public string Title { get; set; }
         public string ImgBase64 { get; set; }
-
-        public MessageImageBox(string Title, string content, string arriveTime, Side side)
+        public BitmapImage Avatar { get; set; }
+        public MessageImageBox(string Title, string content, string arriveTime,long userid, Side side)
         {
             InitializeComponent();
-            ImgBase64 = content;
-            byte[] data =  System.Convert.FromBase64String(content);
+            ImgBase64 = ImageSupportInstance.getInstance().getImageResourceBaseString(long.Parse(content));
+            byte[] data =  System.Convert.FromBase64String(ImgBase64);
             MemoryStream memoryStream = new MemoryStream(data);
             var imageSource = new BitmapImage();
             imageSource.BeginInit();
@@ -40,7 +41,11 @@ namespace CyDu.Panel
 
             this.Title = Title;
             TileMess.Text = Title + "    " + arriveTime;
-           
+
+            Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(userid);
+            ImgMess1.Source = Avatar;
+            ImgMess2.Source = Avatar;
+
             if (side == Side.User)
             {
                 ImgMess1.Visibility = Visibility.Hidden;

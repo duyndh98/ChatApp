@@ -28,15 +28,13 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="3*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Image Grid.RowSpan="1" Grid.Row="1"  Name="ImgMess1" >
-                <Image.Source>/img/user2.PNG</Image.Source>
+        <Image Grid.RowSpan="1" Grid.Row="1"  Name="ImgMess1" Source="{Binding Avatar}" >
                 <Image.Margin>10,10,10,10</Image.Margin>
             </Image>
-            <Image Grid.RowSpan="1" Grid.Row="1" Grid.Column="2" Name="ImgMess2" >
-                <Image.Source>/img/user2.PNG</Image.Source>
+        <Image Grid.RowSpan="1" Grid.Row="1" Grid.Column="2" Name="ImgMess2"  Source="{Binding Avatar}">
                 <Image.Margin>10,10,10,10</Image.Margin>
             </Image>
-        <TextBlock x:Name="TileMess" Grid.Row="0" Grid.Column="1" Text="{Binding Title}" Foreground="Black" FontSize="10">
+        <TextBlock x:Name="TileMess" Grid.Row="0" Grid.Column="1" Text="{Binding Title}" Foreground="Black" FontSize="10" >
             <TextBlock.HorizontalAlignment>
                 <HorizontalAlignment>Left</HorizontalAlignment>
             </TextBlock.HorizontalAlignment>

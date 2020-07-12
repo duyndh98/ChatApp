@@ -63,7 +63,8 @@
 
 
                 <ScrollViewer Height="414">
-                    <ListView Width="335" Height="auto" ItemsSource="{Binding History}"  Name="lvHistory" Background="White" PreviewMouseLeftButtonUp="lvHistory_PreviewMouseLeftButtonUp" >
+                    <ListView Width="335" Height="auto" ItemsSource="{Binding History}"  Name="lvHistory" Background="White"
+                              PreviewMouseLeftButtonUp="lvHistory_PreviewMouseLeftButtonUp" >
 
                         <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
 
@@ -82,39 +83,41 @@
                                     </Grid.RowDefinitions>
 
                                     <Image Name="ico" Grid.Column="0" Grid.RowSpan="2" Width="50" Height="50"
-                                   Source="/img/user2.PNG"
+                                   Source="/img/chat_40px.png" 
                                    />
                                     <TextBlock x:Name="NameItem" 
-                                   Text="{Binding Text}"
-                                   Grid.Column="1"
-                                   Grid.Row="0"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Width="200"
-                                   Height="auto" 
-                                   Background="{x:Null}" 
-                                   Foreground="#DD000000" FontWeight="Normal" FontSize="13" 
+                                       Text="{Binding Text}"
+                                       Grid.Column="1"
+                                       Grid.Row="0"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Width="200"
+                                       Height="auto" 
+                                       Background="{x:Null}" 
+                                       Foreground="#DD000000" FontWeight="{Binding fontWeight, Mode=TwoWay}" 
+                                       FontSize="13" 
                                     >
                                     </TextBlock>
 
-                                    <!--<TextBlock x:Name="TextItem"
-                                    Text="{Binding Text}"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    VerticalAlignment="Center"
-                                    Width="200"
-                                    Height="auto" HorizontalAlignment="Left">
-                                    </TextBlock>-->
+                                    <TextBlock x:Name="TextItem"
+                                        Text="{Binding Mess}"
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        VerticalAlignment="Center"
+                                        Width="200"
+                                        FontWeight="{Binding fontWeight , Mode=TwoWay}"                                               
+                                        Height="auto" HorizontalAlignment="Left" FontSize="10">
+                                    </TextBlock>
 
                                     <TextBlock x:Name="Date"
-                                    Text="01-07-2020"
-                                    FontSize="10"    
-                                    Grid.Column="2"  
-                                    Grid.Row="0"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    TextAlignment="Right" Margin="0,0,0,0"                                             
-                                           >
+                                        Text="{Binding Date}"
+                                        FontSize="10"    
+                                        Grid.Column="2"  
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        TextAlignment="Right" Margin="0,0,0,0"                                             
+                                               >
                                     </TextBlock>
                                 </Grid>
                             </DataTemplate>

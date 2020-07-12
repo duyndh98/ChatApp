@@ -16,7 +16,7 @@
              TextOptions.TextRenderingMode="Auto"
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2" Background="#F0F4F8">
+    <materialDesign:Card     materialDesign:ShadowAssist.ShadowDepth="Depth2"  Background="#F0F4F8">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -30,17 +30,23 @@
                 <RowDefinition Height="1.2*" />
             </Grid.RowDefinitions>
 
-            <Button x:Name="btUserIcon" Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Center"  VerticalAlignment="Top" Height="60" Margin="10,0" Width="67" Background="#00000000" BorderBrush="#00000000" Click="UserIconClick">
-                <StackPanel>
-                    <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Height="50" VerticalAlignment="Top" Width="50" Margin="0,5,0,0" Source="/img/user2.png"/>
+            <Button x:Name="btUserIcon"   Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Center"  VerticalAlignment="Top" Height="60" Margin="10,0" Width="85" Background="#00000000" BorderBrush="#00000000" Click="UserIconClick">
+                <StackPanel Width="50">
+                    <Image x:Name="userimg" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Height="50" VerticalAlignment="Top" Width="50" Margin="-10,5,0,0" Source="{Binding Useravatar}"/>
                     <TextBlock></TextBlock>
                 </StackPanel>
             </Button>
             <Label Name="userFullName" Grid.Column="1" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="#00000000" Margin="0,10,0,0" />
+            <!--<Button x:Name="AdminPanel" Click="AdminPanel_Click" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="#DDFFFFFF" Height="55" Foreground="{x:Null}" Margin="0,0,15,0">
+                <WrapPanel>
+                    <materialDesign:PackIcon Kind="Key" Foreground="#DD263CCB" HorizontalAlignment="Left" Margin="6,0,0,0" Width="25" Height="25" />
+                    <TextBlock FontSize="12" Foreground="#DD263CCB" Height="24" > Admin</TextBlock>
+                </WrapPanel>
+            </Button>-->
             <Button x:Name="AdminPanel" Click="AdminPanel_Click" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="#DDFFFFFF" Height="55" Foreground="{x:Null}" Margin="0,0,15,0">
                 <WrapPanel>
-                    <materialDesign:PackIcon Kind="Key" Foreground="#DDFFE800" HorizontalAlignment="Left" Margin="6,0,0,0" Width="25" Height="25" />
-                    <TextBlock FontSize="12" Foreground="#DD263CCB" Height="24" > Admin</TextBlock>
+                    <materialDesign:PackIcon Kind="Cog" Foreground="#DD263CCB" HorizontalAlignment="Left" Margin="6,0,0,0" Width="25" Height="25" />
+                    <TextBlock FontSize="12" Foreground="#DD263CCB" Height="24" >Config</TextBlock>
                 </WrapPanel>
             </Button>
             <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="6,8,20,10" CornerRadius="15" BorderBrush="Gray" Background="White" BorderThickness="2" DockPanel.Dock="Top" Height="33" >
@@ -86,11 +92,11 @@
             </Button>
 
             
-            <Button x:Name="b" Width="Auto" Height="Auto" Background="#0CFDFDFD" BorderBrush="White" BorderThickness="0">
+            <Button x:Name="btNotifi" Click="btNotifi_Click" Width="Auto" Height="Auto" Background="#0CFDFDFD" BorderBrush="White" BorderThickness="0">
                 <Grid.Column>3</Grid.Column>
                 <Grid.Row>2</Grid.Row>
                 <WrapPanel>
-                    <materialDesign:Badged 
+                    <materialDesign:Badged   Name="notifibadge"
                       Badge="{Binding NotifiBadge}" >
                         <materialDesign:PackIcon Margin="8,2,0,0" Kind="BellOutline" Width="25" Height="auto" Foreground="#DD263CCB" />
 

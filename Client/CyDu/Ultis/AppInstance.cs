@@ -11,10 +11,11 @@ namespace CyDu.Ultis
     {
         private static AppInstance _instance = null;
         private static  User _user;
-        //private static long _lastTimespan;
         private static List<Conversation> _conversationList;
         private static List<Contact> _contactsList;
         private static Dictionary<long, string> _dirFullname;
+        private static string _password; //do ko có hàm update avatar riêng
+
         public static AppInstance getInstance()
         {
             if (_instance==null)
@@ -79,7 +80,14 @@ namespace CyDu.Ultis
             return _dirFullname[id];
         }
 
-
+        public void SetPass(string pass)
+        {
+            _password = pass;
+        }
+        public string GetPass()
+        {
+            return _password;
+        }
         //public long GetLastTimespan()
         //{
         //    return _lastTimespan;

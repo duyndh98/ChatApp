@@ -1,0 +1,16 @@
+﻿<Window x:Class="CyDu.Windown.ChatHub"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CyDu.Windown"
+        mc:Ignorable="d"
+        Title="ChatHub" Height="447" Width="437">
+    <Grid>
+        <Button Name="ConnectBt" Content="Connect" Click="ConnectBt_Click" HorizontalAlignment="Left" Margin="82,64,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="SendBt" Content="Send" Click="SendBt_Click" HorizontalAlignment="Left" Margin="220,64,0,0" VerticalAlignment="Top" Width="74"/>
+        <Image HorizontalAlignment="Left" Height="246" Margin="40,101,0,0" VerticalAlignment="Top" Width="330"/>
+        <TextBlock x:Name="contentLable" HorizontalAlignment="Left" Margin="23,368,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="375"/>
+
+    </Grid>
+</Window>

@@ -31,12 +31,10 @@ namespace CyDu.Windown
         public ObservableCollection<ConversationsView> History { get; set; }
         public event EventHandler HistoryEventHandler;
         private BackgroundWorker ConversationWorker;
-        private String SearchText;
         
 
         public HistoryWindown(ObservableCollection<ConversationsView> _listhistory)
         {
-            SearchText = "";
             History = _listhistory;
             InitializeComponent();
             this.DataContext = this;
@@ -52,7 +50,7 @@ namespace CyDu.Windown
         {
             ObservableCollection<ConversationsView> conversationviews = e.Result as ObservableCollection<ConversationsView>;
           
-            bool check = true;
+            bool isNew = false;
             if (conversationviews.Count == History.Count)
             {
                 foreach (var i in conversationviews)
@@ -60,15 +58,26 @@ namespace CyDu.Windown
                    ConversationsView cv = History.Where(x => x.Text == i.Text).FirstOrDefault();
                     if (cv ==null)
                     {
-                        check = false;
+                        isNew = true;
                         break;
                     }
+                    cv = History.Where(x => x.Mess == i.Mess).FirstOrDefault();
+                    if (cv == null)
+                    {
+                        if (History.Count != 0 && i.MessUserId != AppInstance.getInstance().GetUser().Id )//lúc start ko bold và là ng r ko bold
+                            i.fontWeight = "Normal"; //bold nhé
+                        else
+                            i.fontWeight = "Normal";
+                        isNew = true;
+                        break;
+                    }
+                 
                 }
             }
             else
-                check = false;
+                isNew = true;
             
-            if (!check && !SearchText.Equals("")) // và ko phải là đang search
+            if (isNew/* && !SearchText.Equals("")*/) // và ko phải là đang search
             {
                 History = conversationviews;
                 lvHistory.ItemsSource = History;
@@ -99,11 +108,43 @@ namespace CyDu.Windown
 
             foreach (Conversation conver in ConversationList)
             {
+                string lastMess = "";
+                string time = "";
+                long lastMessUserId = 0;
+                using (HttpClient client = new HttpClient())
+                {
+                   
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.GetAsync("/api/Conversations/Messages/Last?id="+conver.Id, HttpCompletionOption.ResponseContentRead).Result;
+                    Message mess = response.Content.ReadAsAsync<Message>().Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        lastMess = mess.Content;
+                    }
+
+                    if (mess.Type==2)
+                    {
+                        lastMess = "Send a picture";
+                    }
+                    time = mess.ArrivalTime.ToString("hh:mm dd/MM");
+                    if (time.Equals("12:00 01/01"))
+                    {
+                        time = "";
+                    }
+                    lastMessUserId = mess.SenderId;
+                }
 
                 conversationsViewsList.Add(new ConversationsView()
                 {
                     Pk_seq = conver.Id,
-                    Text = conver.Name
+                    Text = conver.Name,
+                    Mess = lastMess,
+                    MessUserId = lastMessUserId,
+                    Date = time,
+                    Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(lastMessUserId)
                 }); ;
             }
             e.Result = conversationsViewsList;
@@ -138,12 +179,17 @@ namespace CyDu.Windown
             ListView lv = sender as ListView;
             try
             {
+                History.ElementAt(lv.SelectedIndex).fontWeight = null;;
+
                 HistoryEventHandler(this, new HistoryItemSelectedArgs()
                 {
                     itemIndex = lv.SelectedIndex,
                     pk_seq = History.ElementAt(lv.SelectedIndex).Pk_seq,
                     text = History.ElementAt(lv.SelectedIndex).Text
                 });
+
+                lvHistory.ItemsSource = History;
+
             }
             catch (ArgumentOutOfRangeException)
             {

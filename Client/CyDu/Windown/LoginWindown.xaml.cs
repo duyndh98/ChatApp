@@ -34,15 +34,43 @@ namespace CyDu
             ReadSavedUser();
         }
 
+        public void SetAccount(string username, string password)
+        {
+            usernameBox.Text = username;
+            PasswordBox.Password = password;
+        }
+
         private void ReadSavedUser()
         {
-          
-           
+            //RegistryKey rk = Registry.LocalMachine.OpenSubKey("SOFTWARE",true);
+            //RegistryKey subkey =  rk.CreateSubKey("CyDu");
+            //try
+            //{
+            //    string username = subkey.GetValue("username").ToString();
+            //    string pass = subkey.GetValue("pass").ToString();
+            //}
+            //catch (Exception)
+            //{
+
+            //}
+         
         }
 
         private void WritePassword()
         {
-           
+            //RegistryKey rk = Registry.LocalMachine.OpenSubKey("SOFTWARE",true);
+            //RegistryKey subkey = rk.CreateSubKey("CyDu");
+            //try
+            //{
+            //    string username = usernameBox.Text;
+            //    string pass = PasswordBox.Password;
+            //    subkey.SetValue("username",username);
+            //    subkey.SetValue("pass", pass);
+            //}
+            //catch (Exception)
+            //{
+
+            //}
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -54,18 +82,22 @@ namespace CyDu
 
                 MainChatWindown main = new MainChatWindown();
                 main.Show();
-                this.Close();
+
+                //ChatHub hub = new ChatHub();
+                //hub.Show();
+
+                Close();
             }
 
-            //MainChatWindown main = new MainChatWindown();
-            //main.Show();
-            //this.Close();
+           
         }
 
         private async Task LoginAsync()
         {
             string username = usernameBox.Text;
             string pass = PasswordBox.Password;
+            //bỏ khi có hàm update avatar
+            AppInstance.getInstance().SetPass(pass);
             LoginUser userLogin = new LoginUser() { Username = username, Password = pass };
 
             string url = Ultils.getUrl();
@@ -86,6 +118,18 @@ namespace CyDu
                     ErrLable.Content = mess.Message;
                 }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void SignUpBt_Click(object sender, RoutedEventArgs e)
+        {
+            SignUpWindown windown = new SignUpWindown();
+            windown.Show();
+            Close();
         }
     }
 }

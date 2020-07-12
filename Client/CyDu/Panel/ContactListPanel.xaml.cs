@@ -2,6 +2,7 @@
 using CyDu.Model;
 using CyDu.Ultis;
 using CyDu.ViewModel;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,17 +34,34 @@ namespace CyDu.Windown
     {
         public ObservableCollection<ContactListItem> Constacts { get; set; }
         private BackgroundWorker Bgworker;
+        public EventHandler ContactEvenHandle;
 
-        public ContactListControl(ObservableCollection<ContactListItem> Constacts)
+        public ContactListControl(ObservableCollection<ContactListItem> _Constacts)
         {
             InitializeComponent();
-            this.Constacts = Constacts;
+            Constacts = new ObservableCollection<ContactListItem>();
+            foreach (var item in _Constacts )
+            {
+                if (item.Status==1)
+                {
+                    long id = item.FromUserId;
+                    if (id== AppInstance.getInstance().GetUser().Id)
+                    {
+                        id = item.ToUserId;
+                    }
+                    item.Username = AppInstance.getInstance().GetFullname(id);
+
+                    Constacts.Add(item);
+                }
+            }
             lvContact.ItemsSource = this.Constacts;
             Bgworker = new BackgroundWorker();
             Bgworker.DoWork += Bgworker_DoWork;
             Bgworker.RunWorkerCompleted += Bgworker_RunWorkerCompleted;
             Bgworker.RunWorkerAsync(2000);
         }
+
+     
 
         private void Bgworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -76,28 +94,34 @@ namespace CyDu.Windown
 
             foreach (Contact contact in contactList)
             {
-
-                long id = contact.ToUserId;
-                if (contact.ToUserId == AppInstance.getInstance().GetUser().Id)
+                if (contact.Status==1)
                 {
-                    id = contact.FromUserId;
-                }
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(Ultils.url);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                    HttpResponseMessage response = client.GetAsync("/api/Users/" + id, HttpCompletionOption.ResponseContentRead).Result;
-                    User users =  response.Content.ReadAsAsync<User>().Result;
-                    AppInstance.getInstance().SetFullname(users.Id, users.FullName);
-                    contactItems.Add(new ContactListItem()
+                    long id = contact.FromUserId;
+                    if (id == AppInstance.getInstance().GetUser().Id)
                     {
-                        UserId = id,
-                        Username = AppInstance.getInstance().GetFullname(contact.ToUserId),
-                        Status = 1
-                    });
+                        id = contact.ToUserId;
+                    }
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(Ultils.url);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                        HttpResponseMessage response = client.GetAsync("/api/Users/" + id, HttpCompletionOption.ResponseContentRead).Result;
+                        User users = response.Content.ReadAsAsync<User>().Result;
+                        AppInstance.getInstance().SetFullname(users.Id, users.FullName);
+                        contactItems.Add(new ContactListItem()
+                        {
+                            ToUserId = contact.ToUserId,
+                            Username = AppInstance.getInstance().GetFullname(id),
+                            Status = 1,
+                            FromUserId = contact.FromUserId,
+                            Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(id)
+                        });;
+                    }
                 }
+                
             }
             e.Result = contactItems;
         }
@@ -133,8 +157,42 @@ namespace CyDu.Windown
                         contactList = response.Content.ReadAsAsync<List<Contact>>().Result;
                     }
                 }
-                AppInstance.getInstance().SetContacts(contactList); 
+                AppInstance.getInstance().SetContacts(contactList);
+
+
+
+                //send to hub
+              
             }
+        }
+
+        private void lvContact_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ListView lv = sender as ListView;
+            try
+            {  
+                long id = Constacts.ElementAt(lv.SelectedIndex).FromUserId;
+                if (id == AppInstance.getInstance().GetUser().Id)
+                {
+                    id = Constacts.ElementAt(lv.SelectedIndex).ToUserId;
+                }
+                ContactEvenHandle(this, new ContactItemSelectedArgs()
+                {
+                    userId = id
+                }) ;
+
+                lvContact.ItemsSource = Constacts;
+
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+
+            }
+        }
+
+        public class ContactItemSelectedArgs : EventArgs
+        {
+            public long userId;
         }
     }
 }

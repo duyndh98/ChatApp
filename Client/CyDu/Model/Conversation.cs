@@ -9,16 +9,19 @@ namespace CyDu.Model
 {
     public class Conversation
     {
-        [JsonProperty("id")]
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public long Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("hostUserId" , NullValueHandling = NullValueHandling.Ignore)]
+        public long HostUserId { get; set; }
     }
 
-    public class Conversation2
+    public class ConversationMember
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("userId")]
+        public long UserIds { get; set; }
     }
 }

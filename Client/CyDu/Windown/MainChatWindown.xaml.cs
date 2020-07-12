@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static CyDu.Panel.MenuControl;
+using static CyDu.Windown.ContactListControl;
 
 namespace CyDu.Windown
 {
@@ -32,6 +33,7 @@ namespace CyDu.Windown
 
         private HistoryWindown Historywindown;
         private ContactListControl ContactWindown;
+        private NotifiPanel NotifiWindown;
 
         public MainChatWindown()
         {
@@ -47,12 +49,17 @@ namespace CyDu.Windown
             Menupanel.HistoryEventHandler += Window_HistoryPannelEventHandle;
             Menupanel.LogoutEventHandler += Menupanel_LogoutEventHandler;
             Menupanel.ContactEventHandler += Menupanel_ContactEventHandler;
+            Menupanel.NotifiEventHandler += Menupanel_NotifiEventHandler;
             Menupanel.SearchEventHandler += Menupanel_SearchEventHandler;
             TopLeftPanel.Children.Add(Menupanel);
 
             //load contact
             LoadContact().Wait();
             ContactWindown = new ContactListControl(ContactViews);
+            ContactWindown.ContactEvenHandle += ContactItemEventHandler;
+
+            //load notifi
+            NotifiWindown = new NotifiPanel(ContactViews);
 
             //load conversation panel first
             LoadConversation().Wait();
@@ -70,6 +77,15 @@ namespace CyDu.Windown
             //admin.Show();
         }
 
+        private void Menupanel_NotifiEventHandler(object sender, EventArgs e)
+        {
+            ContactViews.Clear();
+            LoadContact().Wait();
+            NotifiWindown.Name = "Notifi";
+            BotLeftPanel.Children.Clear();
+            BotLeftPanel.Children.Add(NotifiWindown);
+        }
+
         private void Menupanel_SearchEventHandler(object sender, EventArgs e)
         {
             SearchTextChangeEventArgs arg = e as SearchTextChangeEventArgs;
@@ -81,7 +97,6 @@ namespace CyDu.Windown
         {
             ContactViews.Clear();
             LoadContact().Wait();
-            ContactWindown = new ContactListControl(ContactViews);
             ContactWindown.Name = "Contact";
             BotLeftPanel.Children.Clear();
             BotLeftPanel.Children.Add(ContactWindown);
@@ -99,7 +114,6 @@ namespace CyDu.Windown
         {
             ConversationViews.Clear();
             LoadConversation().Wait();
-            Historywindown = new HistoryWindown(ConversationViews);
             Historywindown.Name = "Historywd";
             Historywindown.HistoryEventHandler += HistoryItemEventHandler;
             BotLeftPanel.Children.Clear();
@@ -115,6 +129,35 @@ namespace CyDu.Windown
             ChattingPanel chattingPanel = new ChattingPanel(pkseq);
             RightPanel.Children.Add(chattingPanel);
             //chattingPanel.LoadMessageAsync().Wait(); ;
+        }
+
+        private void ContactItemEventHandler(object sender, EventArgs e)
+        {
+            ContactItemSelectedArgs item = e as ContactItemSelectedArgs;
+            ConversationWithOther conver = new ConversationWithOther();
+            conver.Name = "Noname conversation";
+            conver.UserIds = new long[] { item.userId };
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(Ultils.getUrl());
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                HttpResponseMessage response = client.PostAsJsonAsync("/api/Conversations/WithMembers", conver).Result;
+                if (response.StatusCode==System.Net.HttpStatusCode.Conflict || response.StatusCode == System.Net.HttpStatusCode.OK)//trùng hoặc vừa tạo mới
+                {
+                    Conversation conversation = response.Content.ReadAsAsync<Conversation>().Result;
+     
+                    RightPanel.Children.Clear();
+                    ChattingPanel chattingPanel = new ChattingPanel(conversation.Id);
+                    RightPanel.Children.Add(chattingPanel);
+
+                }
+                else
+                {
+               
+                }
+            }
         }
         //================================================================================
 
@@ -139,25 +182,34 @@ namespace CyDu.Windown
 
             foreach (Contact contact in contactList)
             {
-                long id = contact.ToUserId;
-                if (contact.ToUserId == AppInstance.getInstance().GetUser().Id)
-                {
-                    id = contact.FromUserId;
-                }
+                
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(url);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                    HttpResponseMessage response = client.GetAsync("/api/Users/" + id, HttpCompletionOption.ResponseContentRead).Result;
+                   
+                    HttpResponseMessage response = client.GetAsync("/api/Users/" + contact.FromUserId, HttpCompletionOption.ResponseContentRead).Result;
                     User users = await response.Content.ReadAsAsync<User>();
                     AppInstance.getInstance().SetFullname(users.Id, users.FullName);
+
+                    response = client.GetAsync("/api/Users/" + contact.ToUserId, HttpCompletionOption.ResponseContentRead).Result;
+                    users = await response.Content.ReadAsAsync<User>();
+                    AppInstance.getInstance().SetFullname(users.Id, users.FullName);
+
+                    long id = contact.FromUserId;
+                    if (id == AppInstance.getInstance().GetUser().Id)
+                    {
+                        id = contact.ToUserId;
+                    }
+
                     ContactViews.Add(new ContactListItem()
                     {
-                        UserId = id,
-                        Username = AppInstance.getInstance().GetFullname(contact.ToUserId),
-                        Status = 1
+                        ToUserId = contact.ToUserId,
+                        Status = contact.Status,
+                        FromUserId = contact.FromUserId,
+                        Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(id)
                     }) ;
                 }
             }
@@ -190,46 +242,75 @@ namespace CyDu.Windown
                 long conversationId = conver.Id;
 
                 //Đoạn này load tên user lên có thể bỏ qua
+                //using (HttpClient client = new HttpClient())
+                //{
+                //    client.BaseAddress = new Uri(url);
+                //    client.DefaultRequestHeaders.Accept.Clear();
+                //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                //    HttpResponseMessage response = client.GetAsync("/api/Conversations/Members?id=" + conversationId, HttpCompletionOption.ResponseContentRead).Result;
+                //    HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
+                //    List<User> users = await response.Content.ReadAsAsync<List<User>>();
+                //    foreach (User Conv_users in users)
+                //    {
+                //        if (Conv_users.Id != AppInstance.getInstance().GetUser().Id)
+                //            userIds.Add(Conv_users.Id);
+                //    }
+                //}
+
+                //foreach (long id in userIds)
+                //{
+                //    using (HttpClient client = new HttpClient())
+                //    {
+                //        client.BaseAddress = new Uri(url);
+                //        client.DefaultRequestHeaders.Accept.Clear();
+                //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                //        HttpResponseMessage response = client.GetAsync("/api/Users/" + id, HttpCompletionOption.ResponseContentRead).Result;
+                //        User users = await response.Content.ReadAsAsync<User>();
+                //        user += users.Username + " ";
+                //        AppInstance.getInstance().SetFullname(users.Id, users.FullName);
+                //    }
+                //}
+                //if (user.Length > 20)
+                //{
+                //    user = user.Substring(0, 17) + "...";
+                //}
+                string lastMess = "";
+                string time = "";
                 using (HttpClient client = new HttpClient())
                 {
+                   
                     client.BaseAddress = new Uri(url);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                    HttpResponseMessage response = client.GetAsync("/api/Conversations/Members?id="+conversationId, HttpCompletionOption.ResponseContentRead).Result;
-                    //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
-                    List<User> users = await response.Content.ReadAsAsync<List<User>>();
-                    foreach (User Conv_users in users)
+                    HttpResponseMessage response = client.GetAsync("/api/Conversations/Messages/Last?id="+conver.Id, HttpCompletionOption.ResponseContentRead).Result;
+                    Message mess = response.Content.ReadAsAsync<Message>().Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        if(Conv_users.Id!= AppInstance.getInstance().GetUser().Id)
-                             userIds.Add(Conv_users.Id);
+                        lastMess = mess.Content;
                     }
-                }
 
-                foreach (long id in userIds)
-                {
-                    using (HttpClient client = new HttpClient())
+                    if (mess.Type==2)
                     {
-                        client.BaseAddress = new Uri(url);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                        HttpResponseMessage response = client.GetAsync("/api/Users/"+id, HttpCompletionOption.ResponseContentRead).Result;
-                        User users = await response.Content.ReadAsAsync<User>();
-                        user += users.Username + " ";
-                        AppInstance.getInstance().SetFullname(users.Id, users.FullName);
+                        lastMess = "Send a picture";
                     }
-                }
-                if (user.Length>20)
-                {
-                    user = user.Substring(0, 17) + "...";
+                    time = mess.ArrivalTime.ToString("hh:mm dd/MM");
+                    if (time.Equals("12:00 01/01"))
+                    {
+                        time = "";
+                    }
                 }
 
                 ConversationViews.Add(new ConversationsView()
                 {
                     Pk_seq = conver.Id,
-                    Text = conver.Name
-                }); ;
+                    Text = conver.Name,
+                    Mess = lastMess,
+                    Date = time,
+                    fontWeight = "Normal"
+                }); 
             }
         }
     }

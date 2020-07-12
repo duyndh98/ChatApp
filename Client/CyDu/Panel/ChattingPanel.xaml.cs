@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +16,9 @@ using CyDu.Model;
 using CyDu.Panel;
 using CyDu.Ultis;
 using MaterialDesignThemes.Wpf;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace CyDu.Windown
 {
@@ -28,6 +32,8 @@ namespace CyDu.Windown
         private string Title;
         private long lasttimespan;
         BackgroundWorker worker;
+        HubConnection connection;
+
         public ChattingPanel(long pk_seq)
         {
             this.ConversationId = pk_seq;
@@ -36,16 +42,80 @@ namespace CyDu.Windown
             this.DataContext = this;
             lasttimespan = 0;
 
-            //Thread thread = new Thread(UpdatePanel);
-            //thread.Name = "LoadMessThread";
-            //thread.Start();
-            //LoadMessageAsync();
+            //Background worker update mess
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWorkAsync;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.RunWorkerAsync(3000);
-            mainScroll.ScrollToBottom();
+            worker.RunWorkerAsync(0);
 
+            SetupHubConnectionAsync();
+        }
+
+        private async Task SetupHubConnectionAsync()
+        {
+            connection = new HubConnectionBuilder()
+              .WithUrl("https://localhost:44344/chathub")
+              .Build();
+            
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+        
+
+            connection.On<string, string>("ReceiveMessage", (type, message) =>
+            {
+                if (type.Equals("mess"))
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        ReceiveMessage(message);
+                    });
+                }
+               
+            });
+
+            try
+            {
+                await connection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ReceiveMessage(string message)
+        {
+            Message mess = JsonConvert.DeserializeObject<Message>(message);
+            if (mess.ConversationId!=ConversationId)
+            {
+                return;
+            }
+            MessageBox.Side side;
+            if (mess.SenderId == AppInstance.getInstance().GetUser().Id)
+            {
+                side = MessageBox.Side.User;
+            }
+            else
+            {
+                side = MessageBox.Side.Other;
+            }
+            string title = AppInstance.getInstance().GetFullname(mess.SenderId);
+
+            if (mess.Type == 1)
+            {
+                MessageBox messBos = new MessageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"),mess.SenderId,side);
+                mainPanel.Children.Add(messBos);
+            }
+            if (mess.Type == 2)
+            {
+                MessageImageBox messBox = new MessageImageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"), mess.SenderId, (MessageImageBox.Side)side);
+                mainPanel.Children.Add(messBox);
+            }
+
+            mainScroll.ScrollToBottom();
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -70,19 +140,19 @@ namespace CyDu.Windown
 
                     if (mess.Type == 1)
                     {
-                        MessageBox messBos = new MessageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"), side);
+                        MessageBox messBos = new MessageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"),mess.SenderId, side);
                         mainPanel.Children.Add(messBos);
                     }
                     if (mess.Type == 2)
                     {
-                        MessageImageBox messBox = new MessageImageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"), (MessageImageBox.Side) side);
+                        MessageImageBox messBox = new MessageImageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"), mess.SenderId, (MessageImageBox.Side) side);
                         mainPanel.Children.Add(messBox);
                     }
                    
                 }
             }
-            
-            worker.RunWorkerAsync(3000);
+            mainScroll.ScrollToBottom();
+            //worker.RunWorkerAsync(3000);
         }
 
         async void worker_DoWorkAsync(object sender, DoWorkEventArgs e)
@@ -129,84 +199,59 @@ namespace CyDu.Windown
 
         }
 
-        //public async void LoadMessageAsync()
-        //{
-        //    string url = Ultils.getUrl();
-         
-        //    mainPanel.Children.Clear();
-        //    using (HttpClient client = new HttpClient())
-        //        {
-        //        client.BaseAddress = new Uri(url);
-        //        client.DefaultRequestHeaders.Accept.Clear();
-        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-        //        HttpResponseMessage response = client.GetAsync("/api/Conversations/Messages/New?id=" + this.ConversationId+ "&lastTimeSpan="+lasttimespan, HttpCompletionOption.ResponseContentRead).Result;
-        //        //HttpResponseMessage response = client.PostAsJsonAsync("/api/ConversationsView/Members", AppInstance.getInstance().getUser().Id).Result;
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            MessageWithTimespan listmassage = await response.Content.ReadAsAsync<MessageWithTimespan>();
-        //            lasttimespan = 0;
-        //            //lasttimespan = listmassage.Item1;
-        //            foreach (Message mess in listmassage.Item2)
-        //            {
-        //                MessageBox.Side side;
-        //                if (mess.SenderId == AppInstance.getInstance().GetUser().Id)
-        //                {
-        //                    side = MessageBox.Side.User;
-        //                }
-        //                else
-        //                {
-        //                    side = MessageBox.Side.Other;
-        //                }
-        //                string title = AppInstance.getInstance().GetFullname(mess.SenderId);
-        //                MessageBox messBos = new MessageBox(title, mess.Content, mess.ArrivalTime.ToString("hh:mm:ss dd-MM-yyyy"), side);
-        //                mainPanel.Children.Add(messBos);
-        //            }
-        //        }
-        //    }
+   
+        private async void sendMessage()
+        {
+            string url = Ultils.getUrl();
+            string content = messTextbox.Text;
+            MessageSend mess = new MessageSend()
+            {
+                Content = content,
+                ConversationId = this.ConversationId,
+                Type = 1
+            };
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(url);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                HttpResponseMessage response = client.PostAsJsonAsync("/api/Messages", mess).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    System.Windows.MessageBox.Show("Lỗi khi gửi tin");
+                }
+            }
+            messTextbox.Text = "";
 
-        //    using (HttpClient client = new HttpClient())
-        //    {
-        //        client.BaseAddress = new Uri(url);
-        //        client.DefaultRequestHeaders.Accept.Clear();
-        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-        //        HttpResponseMessage response = client.GetAsync("/api/Conversations/" + this.ConversationId , HttpCompletionOption.ResponseContentRead).Result;
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            Conversation conver = response.Content.ReadAsAsync<Conversation>().Result;
-        //        }
 
-        //    }
-        //    Titlelable.Content = Title;
-        //    mainScroll.ScrollToBottom();
-        //}
+            //send to hub
+            Message hubmess = new Message()
+            {
+                ArrivalTime = DateTimeOffset.Now,
+                Content = mess.Content,
+                ConversationId = mess.ConversationId,
+                Id = 0,
+                SenderId = AppInstance.getInstance().GetUser().Id,
+                Type = mess.Type
+            };
+
+            string json = JsonConvert.SerializeObject(hubmess);
+            try
+            {
+                await connection.InvokeAsync("SendMessage", "mess", json);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                string url = Ultils.getUrl();
-                string content = messTextbox.Text;
-                MessageSend mess = new MessageSend()
-                {
-                    Content = content,
-                    ConversationId = this.ConversationId,
-                    Type = 1
-                };
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(url);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                    HttpResponseMessage response = client.PostAsJsonAsync("/api/Messages", mess).Result;
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        System.Windows.MessageBox.Show("Lỗi khi gửi tin");
-                    }
-                }
-                messTextbox.Text = "";
+                sendMessage();
                 //LoadMessageAsync();
             }
         }
@@ -261,34 +306,27 @@ namespace CyDu.Windown
             bool? result = dialog.ShowDialog();
             if (result==true)
             {
-                //LoadMessageAsync();
+
             }
         }
 
         private void sendImagebtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = false;
-            openFileDialog.Filter = "Image file (*.png)|*png";
-            if (openFileDialog.ShowDialog() == true)
+            string path = ImageSupportInstance.getInstance().OpenChooseImageDialogBox();
+            if (!path.Equals(""))
             {
-                SendImage(openFileDialog.FileNames[0]);
+                SendImage(path);
             }
         }
 
-        private void SendImage(string path)
+        private async void SendImage(string path)
         {
-            FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            int length = Convert.ToInt32(file.Length);
-            byte[] data = new byte[length];
-            file.Read(data, 0, length);
-            file.Close();
-            string base64 = Convert.ToBase64String(data);
+            Resource res = ImageSupportInstance.getInstance().UploadImage(path,720,640);
 
 
             MessageSend mess = new MessageSend()
             {
-                Content = base64,
+                Content = res.Id.ToString(),
                 ConversationId = this.ConversationId,
                 Type = 2
             };
@@ -306,13 +344,65 @@ namespace CyDu.Windown
                 }
             }
             messTextbox.Text = "";
-            //LoadMessageAsync();
+
+
+
+            //send to hub
+            Message hubmess = new Message()
+            {
+                ArrivalTime = DateTimeOffset.Now,
+                Content = mess.Content,
+                ConversationId = mess.ConversationId,
+                Id = 0,
+                SenderId = AppInstance.getInstance().GetUser().Id,
+                Type = mess.Type
+            };
+
+            string json = JsonConvert.SerializeObject(hubmess);
+            try
+            {
+                await connection.InvokeAsync("SendMessage", "mess", json);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
 
         private void btMemList_Click(object sender, RoutedEventArgs e)
         {
             ConversationMembersDialog dialog = new ConversationMembersDialog(ConversationId);
             bool? result = dialog.ShowDialog();
+        }
+
+        private void sendbtn_Click(object sender, RoutedEventArgs e)
+        {
+            sendMessage();
+        }
+
+        private void editcsname_Click(object sender, RoutedEventArgs e)
+        {
+            EditConversationNameDialog dialog = new EditConversationNameDialog(this.Title,this.ConversationId);
+            bool? result = dialog.ShowDialog();
+            if (result== true)
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(Ultils.url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.GetAsync("/api/Conversations/" + this.ConversationId, HttpCompletionOption.ResponseContentRead).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Conversation conver = response.Content.ReadAsAsync<Conversation>().Result;
+                        this.Title = conver.Name;
+                    }
+
+                }
+                Titlelable.Content = Title;
+
+            }
         }
     }
 }

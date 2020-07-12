@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CyDu.Ultis;
 
 namespace CyDu.Windown
 {
@@ -24,14 +25,19 @@ namespace CyDu.Windown
         public enum Side { User , Other  }
         public string Title { get; set; }
         public string Text { get; set; }
-        public MessageBox(string Title,string  Text,string arriveTime, Side side)
-        {
+        public BitmapImage Avatar { get; set; }
+
+        public MessageBox(string Title,string  Text,string arriveTime,long userId, Side side)
+            {
             InitializeComponent();
 
             this.Text = Text;
             this.Title = Title;
             TileMess.Text = Title+"    "+arriveTime ;
             TextMess.Text = Text;
+            Avatar = ImageSupportInstance.getInstance().GetUserImageFromId(userId);
+            ImgMess1.Source = Avatar;
+            ImgMess2.Source = Avatar;
             if (side==Side.User)
             {
                 ImgMess1.Visibility = Visibility.Hidden;

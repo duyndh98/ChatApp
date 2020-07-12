@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CyDu.Dialogs"
         mc:Ignorable="d"
-           Title="Chatting with ?" Height="366" Width="300"
+           Title="Chatting with ?" Height="432" Width="300"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -25,6 +25,7 @@
             <RowDefinition Height="7*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
 
         </Grid.RowDefinitions>
 
@@ -36,7 +37,7 @@
             ToolTip="Ok Mời những người này vô"
             Grid.Column="1"
             Margin="23,0,23,12" 
-            Grid.Row="3"
+            Grid.Row="4"
             RenderTransformOrigin="0.94,0.406"
             Height="30" >
             OK
@@ -47,7 +48,7 @@
         Name="btcancel"
         Click="btcancel_Click"
            Style="{StaticResource MaterialDesignFlatButton}"
-        ToolTip="MaterialDesignFlatButton"  Grid.Row="3" Margin="15,0,15,12" Height="30">
+        ToolTip="MaterialDesignFlatButton"  Grid.Row="4" Margin="15,0,15,12" Height="30">
             CANCEL
         </Button>
         <TextBlock HorizontalAlignment="Left" Margin="10,6,0,5" TextWrapping="Wrap" Text="Chat with someone " VerticalAlignment="Center" Width="259" FontSize="14" Grid.ColumnSpan="3"/>
@@ -74,7 +75,7 @@
                             IsChecked="{Binding IsSelected , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="White" Width="25" Height="25" HorizontalAlignment="Center"
                             />-->
                             <Image Name="ico" Grid.Column="1" Grid.RowSpan="2" Width="50" Height="50"
-                                   Source="/img/user2.PNG" Margin="5,0"
+                                   Source="{Binding Avater}" Margin="5,0"
                                    />
                             <TextBlock x:Name="Username" 
                                    Text="{Binding Username}"
@@ -104,6 +105,13 @@
             </ListView>
         </ScrollViewer>
 
+        <TextBox
+            x:Name="conversationnametb"
+          Grid.Row="3"
+          Grid.ColumnSpan="2"
+          materialDesign:HintAssist.Hint="Conversation name"
+          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+          VerticalAlignment="Center" Margin="10,0" />
 
     </Grid>
 
