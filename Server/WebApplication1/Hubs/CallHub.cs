@@ -10,7 +10,8 @@ namespace WebApplication1.Hubs
     {
         public Task SendMessageToGroup(string groupName, string message)
         {
-            return Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId}: {message}");
+            //return Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId}: {message}");
+            return Clients.Group(groupName).SendAsync("ReceiveMessage", message);
         }
 
         public async Task AddToGroup(string groupName)
