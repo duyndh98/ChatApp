@@ -34,6 +34,7 @@ namespace CyDu.Windown
         private HistoryWindown Historywindown;
         private ContactListControl ContactWindown;
         private NotifiPanel NotifiWindown;
+        private CallPanel CallWindown;
 
         public MainChatWindown()
         {
@@ -51,6 +52,7 @@ namespace CyDu.Windown
             Menupanel.ContactEventHandler += Menupanel_ContactEventHandler;
             Menupanel.NotifiEventHandler += Menupanel_NotifiEventHandler;
             Menupanel.SearchEventHandler += Menupanel_SearchEventHandler;
+            Menupanel.CallEventHandler += Menupanel_CallEventHandler;
             TopLeftPanel.Children.Add(Menupanel);
 
             //load contact
@@ -60,6 +62,9 @@ namespace CyDu.Windown
 
             //load notifi
             NotifiWindown = new NotifiPanel(ContactViews);
+
+            //call notifi
+            CallWindown = new CallPanel();
 
             //load conversation panel first
             LoadConversation().Wait();
@@ -75,6 +80,12 @@ namespace CyDu.Windown
 
             //AdminWindown admin = new AdminWindown();
             //admin.Show();
+        }
+
+        private void Menupanel_CallEventHandler(object sender, EventArgs e)
+        {
+            BotLeftPanel.Children.Clear();
+            BotLeftPanel.Children.Add(CallWindown);
         }
 
         private void Menupanel_NotifiEventHandler(object sender, EventArgs e)

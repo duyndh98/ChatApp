@@ -53,8 +53,9 @@ namespace CyDu.Windown
 
         private async Task SetupHubConnectionAsync()
         {
+            string url = Ultils.url + "chathub";
             connection = new HubConnectionBuilder()
-              .WithUrl("https://localhost:44344/chathub")
+              .WithUrl(url)
               .Build();
             
             connection.Closed += async (error) =>
@@ -72,6 +73,23 @@ namespace CyDu.Windown
                     {
                         ReceiveMessage(message);
                     });
+                }
+                if (type.Equals("call"))
+                {
+                    string cvid = message.Split('-')[0];
+                    if (cvid.Equals(this.ConversationId.ToString()))
+                    {
+                        string userid = message.Split('-')[1];
+
+                        int videotype = 1;
+                        if (!userid.Equals(AppInstance.getInstance().GetUser().Id.ToString()))
+                        {
+                            videotype = 2;
+                        }
+                        VideocallWindown windown = new VideocallWindown(this.ConversationId, videotype);
+                        windown.Show();
+                    }
+                  
                 }
                
             });
@@ -403,6 +421,20 @@ namespace CyDu.Windown
                 Titlelable.Content = Title;
 
             }
+        }
+
+
+        private async void btcall_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await connection.InvokeAsync("SendMessage", "call", this.ConversationId.ToString()+"-"+AppInstance.getInstance().GetUser().Id);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+       
         }
     }
 }

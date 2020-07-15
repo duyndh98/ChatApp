@@ -35,8 +35,9 @@ namespace CyDu.Dialogs
 
         private async void SetupHubconnection()
         {
+            String url = Ultils.url + "chathub";
             connection = new HubConnectionBuilder()
-              .WithUrl("https://localhost:44344/chathub")
+              .WithUrl(url)
               .Build();
             connection.Closed += async (error) =>
             {

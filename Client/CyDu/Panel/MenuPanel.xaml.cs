@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using CyDu.Model;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CyDu.Panel
 {
@@ -33,9 +34,11 @@ namespace CyDu.Panel
         public event EventHandler ContactEventHandler;
         public event EventHandler NotifiEventHandler;
         public event EventHandler SearchEventHandler;
+        public event EventHandler CallEventHandler;
         public string User { get; set; }
         public int NotifiBadge { get; set; }
         public BitmapImage Useravatar { get; set; }
+        HubConnection connection;
 
         private BackgroundWorker notifiupdateWorker;
         public MenuControl()
@@ -44,7 +47,8 @@ namespace CyDu.Panel
             NotifiBadge = 0;
             InitializeComponent();
             this.DataContext = this;
-           
+
+            SetupHubConnectionAsync();
             userFullName.Content = AppInstance.getInstance().GetUser().FullName;
 
             string basestr = ImageSupportInstance.getInstance().getUserBase64Image(AppInstance.getInstance().GetUser().Id);
@@ -89,6 +93,46 @@ namespace CyDu.Panel
             }
             e.Result =  notifi.ToString();
         }
+        private async Task SetupHubConnectionAsync()
+        {
+            string url = Ultils.url + "chathub";
+            connection = new HubConnectionBuilder()
+              .WithUrl(url)
+              .Build();
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+
+
+            connection.On<string, string>("ReceiveMessage", (type, message) =>
+            {
+
+                if (type.Equals("call"))
+                {
+                    long cvid = long.Parse(message.Split('-')[0]);
+
+                    Conversation cv = AppInstance.getInstance().GetConversations().Where(x => x.Id == cvid).First();
+                    if (cv != null)
+                    {
+                        CallEventHandler(this, new EventArgs());
+
+                    }
+                }
+
+            });
+
+            try
+            {
+                await connection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -102,7 +146,7 @@ namespace CyDu.Panel
 
         private void btCall_Click(object sender, RoutedEventArgs e)
         {
-
+            CallEventHandler(this, new EventArgs());
         }
 
         private void btCOntact_Click(object sender, RoutedEventArgs e)

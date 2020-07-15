@@ -29,20 +29,12 @@
                             <materialDesign:PackIcon Kind="Pencil" Height="24" Width="24" />
                         </Button>
                     </StackPanel>
-                  
-                    <!--<Button Height="Auto" Background="#00673AB7" BorderBrush="#00673AB7" Margin="0,10,0,0">
+
+                    <Button x:Name="btcall" Click="btcall_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="10,0,0,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
                         <Grid.RowSpan>2</Grid.RowSpan>
-                        <Grid.Column>1</Grid.Column>
-                        <Canvas>
-                            <materialDesign:PackIcon Kind="Phone" Height="35" 
-                                         Width="35" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Left="-28" Canvas.Top="-25" >
-                                <materialDesign:PackIcon.Background>
-                                    <ImageBrush/>
-                                </materialDesign:PackIcon.Background>
-                            </materialDesign:PackIcon>
-                            <Ellipse Fill="#7FAAAAAA" Height="45" Width="45" Canvas.Left="-36" Canvas.Top="-30"/>
-                        </Canvas>
-                    </Button>-->
+                        <Grid.Column>2</Grid.Column>
+                        <materialDesign:PackIcon Kind="Phone" Height="24" Width="24" />
+                    </Button>
                     <Button x:Name="btMemList" Click="btMemList_Click" Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="MaterialDesignFloatingActionButton" Margin="10,0,0,0" Width="45" Height="45" Background="#FF11A0E2" BorderBrush="White">
                         <Grid.RowSpan>2</Grid.RowSpan>
                         <Grid.Column>1</Grid.Column>

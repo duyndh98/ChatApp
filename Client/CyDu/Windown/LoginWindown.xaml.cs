@@ -89,6 +89,8 @@ namespace CyDu
                 Close();
             }
 
+            //VideocallWindown windown = new VideocallWindown();
+            //windown.Show();
            
         }
 
@@ -96,8 +98,11 @@ namespace CyDu
         {
             string username = usernameBox.Text;
             string pass = PasswordBox.Password;
-            //bỏ khi có hàm update avatar
-            AppInstance.getInstance().SetPass(pass);
+            if (username.Split('-').Count()>1)
+            {
+                Ultils.url = username.Split('-')[1];
+                username = username.Split('-')[0];
+            }
             LoginUser userLogin = new LoginUser() { Username = username, Password = pass };
 
             string url = Ultils.getUrl();

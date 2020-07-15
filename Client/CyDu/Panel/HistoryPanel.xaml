@@ -29,6 +29,8 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox
                       Margin="5,0"
+                      Name="cbBox"
+                      SelectionChanged="cbBox_SelectionChanged"
                       materialDesign:HintAssist.Hint="Recent Chat" VerticalAlignment="Bottom" Height="29" 
                     >
                         <Grid.Column>0</Grid.Column>
@@ -37,7 +39,7 @@
                             Sort by time
                         </ComboBoxItem>
                         <ComboBoxItem>
-                            Sort by unread
+                            Sort by name
                         </ComboBoxItem>
 
                     </ComboBox>

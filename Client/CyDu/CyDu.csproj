@@ -37,6 +37,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge.Video">
+      <HintPath>.\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow">
+      <HintPath>.\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.4.1361, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.4\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -194,6 +200,9 @@
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserSignup.cs" />
+    <Compile Include="Panel\CallPanel.xaml.cs">
+      <DependentUpon>CallPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Panel\MessageImageBox.xaml.cs">
       <DependentUpon>MessageImageBox.xaml</DependentUpon>
     </Compile>
@@ -208,6 +217,7 @@
     <Compile Include="Ultis\RelayCommand.cs" />
     <Compile Include="Ultis\Ultils.cs" />
     <Compile Include="ViewModel\AdminPanelItem.cs" />
+    <Compile Include="ViewModel\CallPanelItem.cs" />
     <Compile Include="ViewModel\ContactListItem.cs" />
     <Compile Include="ViewModel\ConversationMemberItem.cs" />
     <Compile Include="ViewModel\ConversationsView.cs" />
@@ -247,6 +257,9 @@
     <Compile Include="Windown\SignUpWindown.xaml.cs">
       <DependentUpon>SignUpWindown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windown\VideocallWindown.xaml.cs">
+      <DependentUpon>VideocallWindown.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\AddChatDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -268,6 +281,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\EditConversationNameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panel\CallPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -347,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windown\SignUpWindown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windown\VideocallWindown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

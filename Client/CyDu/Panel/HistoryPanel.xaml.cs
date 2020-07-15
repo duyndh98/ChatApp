@@ -203,6 +203,22 @@ namespace CyDu.Windown
         {
 
         }
+
+        private void cbBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selected = cbBox.SelectedIndex;
+            List<ConversationsView> his;
+            if (selected==0)
+            {
+               his =  History.OrderByDescending(x => x.Date).ToList();
+            }
+            else
+            {
+                 his = History.OrderByDescending(x => x.MessUserId).ToList();
+
+            }
+            lvHistory.ItemsSource = his;
+        }
     }
 
     public class HistoryItemSelectedArgs : EventArgs

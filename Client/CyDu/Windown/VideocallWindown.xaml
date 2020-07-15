@@ -1,0 +1,28 @@
+﻿<Window x:Class="CyDu.Windown.VideocallWindown"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CyDu.Windown"
+        Title="Videocall" Height="555" Width="696"
+   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+   TextElement.FontWeight="Regular"
+   TextElement.FontSize="13"
+   TextOptions.TextFormattingMode="Ideal"
+   TextOptions.TextRenderingMode="Auto"
+   Background="{DynamicResource MaterialDesignPaper}"
+   FontFamily="{DynamicResource MaterialDesignFont}"
+   Closed="Window_Closed" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+   
+        >
+    <Canvas Margin="0,0,4,0" Background="Black">
+        <Image x:Name="mainCall" HorizontalAlignment="Left" Height="517" VerticalAlignment="Top" Width="690" Canvas.Left="10" Canvas.Top="10" Stretch="Fill"></Image>
+
+        <Image  x:Name="userCam"  HorizontalAlignment="Left" Height="177" VerticalAlignment="Top" Width="236
+                " Canvas.Left="464" Canvas.Top="10" Panel.ZIndex="1" RenderTransformOrigin="1.236,1.153" Stretch="Fill"/>
+        <Canvas x:Name="chattingpanel" Width="675" Height="636" Canvas.Left="705">
+
+        </Canvas>
+    </Canvas>
+</Window>
