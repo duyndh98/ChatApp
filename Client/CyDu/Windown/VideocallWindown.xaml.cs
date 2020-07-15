@@ -42,13 +42,17 @@ namespace CyDu.Windown
             Title = AppInstance.getInstance().GetUser().FullName;
             this.ConversationId = conversationid;
             LoadHub();
-
+            mode = 1;
             if (mode == 1)
             {
                 LoadCam();
-
-            }else
-                 LoadSceenCapture();
+                ShareButtonBt.IsEnabled = false;
+            }
+            else
+            {
+                LoadSceenCapture();
+                ShareScreenBt.IsEnabled = false;
+            }
 
             //chattingpanel.Children.Clear();
             //ChattingPanel chattingPanel = new ChattingPanel(1);
@@ -199,7 +203,7 @@ namespace CyDu.Windown
         {
 
             System.Drawing.Rectangle screenArea = System.Drawing.Rectangle.Empty;
-            screenArea.Width = 20;
+            screenArea.Width = 20 ;
             screenArea.Height = 20;
             CaptureSource = new ScreenCaptureStream(screenArea,5);
             CaptureSource.NewFrame += new AForge.Video.NewFrameEventHandler(screenSource_NewFrame);
@@ -221,16 +225,16 @@ namespace CyDu.Windown
 
         private async void UpdateSceernSource(Bitmap bm)
         {
-            BitmapImage img = ImageSupportInstance.getInstance().BitmapToImageSource(bm).Clone();
-            userCam.Source = img.Clone();
+            //BitmapImage img = ImageSupportInstance.getInstance().BitmapToImageSource(bm).Clone();
+            //userCam.Source = img.Clone();
 
             MemoryStream ms = new MemoryStream();
             bm.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
             byte[] byteImage = ms.ToArray();
             byte[] afterreprocess = ImageSupportInstance.getInstance().PreProcessImage(byteImage, 100, 50, System.Drawing.Imaging.ImageFormat.Jpeg);
             string result = Convert.ToBase64String(afterreprocess);
-
-
+            BitmapImage img2 = ImageSupportInstance.getInstance().ConvertFromBaseString(result);
+            userCam.Source = img2;
             result = AppInstance.getInstance().GetUser().Id + "\0" + result;
             byteImage = new byte[1];
             afterreprocess = new byte[1];
@@ -266,7 +270,22 @@ namespace CyDu.Windown
             }
         }
 
+        private void ShareScreenBt_Click(object sender, RoutedEventArgs e)
+        {
+            videoSource.Stop();
+            videoSource.SignalToStop();
+            ShareScreenBt.IsEnabled = false;
+            ShareButtonBt.IsEnabled = true;
+            LoadSceenCapture();
+        }
 
-
+        private void ShareButtonBt_Click(object sender, RoutedEventArgs e)
+        {
+            CaptureSource.Stop();
+            CaptureSource.SignalToStop();
+            ShareScreenBt.IsEnabled = true;
+            ShareButtonBt.IsEnabled = false;
+            LoadCam();
+        }
     }
 }

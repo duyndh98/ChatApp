@@ -48,13 +48,13 @@
                 </ListView.View>
             </ListView>
         </ScrollViewer>
-        <Button Name="savebt" Click="savebt_Click"   Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignRaisedButton}" ToolTip="Resource name: MaterialDesignRaisedButton" Padding="0" Margin="40,25" Height="Auto">SAVE</Button>
+        <Button Name="savebt" Click="savebt_Click"   Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignRaisedButton}"  Padding="0" Margin="40,25" Height="Auto">SAVE</Button>
         <Button
             x:Name="btCancel"
             Click="btCancel_Click"
             Grid.Column="0" Grid.Row="1"
             Style="{StaticResource MaterialDesignFlatButton}"
-            ToolTip="MaterialDesignFlatButton" Margin="40,25" Height="Auto"> 
+             Margin="40,25" Height="Auto"> 
             CLOSE
         </Button>
     </Grid>

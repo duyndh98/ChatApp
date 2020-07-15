@@ -88,7 +88,8 @@ namespace CyDu.Panel
                 HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Contacts", HttpCompletionOption.ResponseContentRead).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    notifi = response.Content.ReadAsAsync<List<Contact>>().Result.Where(x=>x.Status==0).ToList().Count;
+                    long userid = AppInstance.getInstance().GetUser().Id;
+                    notifi = response.Content.ReadAsAsync<List<Contact>>().Result.Where(x=>x.Status==0 && x.FromUserId!= userid).ToList().Count;
                 }
             }
             e.Result =  notifi.ToString();
@@ -113,11 +114,16 @@ namespace CyDu.Panel
                 if (type.Equals("call"))
                 {
                     long cvid = long.Parse(message.Split('-')[0]);
-
+                    long userid = long.Parse(message.Split('-')[1]);
+                    
                     Conversation cv = AppInstance.getInstance().GetConversations().Where(x => x.Id == cvid).First();
                     if (cv != null)
                     {
-                        CallEventHandler(this, new EventArgs());
+                        if (userid != AppInstance.getInstance().GetUser().Id)
+                        {
+                            CallEventHandler(this, new EventArgs());
+
+                        }
 
                     }
                 }

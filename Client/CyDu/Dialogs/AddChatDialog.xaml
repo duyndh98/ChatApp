@@ -48,7 +48,7 @@
         Name="btcancel"
         Click="btcancel_Click"
            Style="{StaticResource MaterialDesignFlatButton}"
-        ToolTip="MaterialDesignFlatButton"  Grid.Row="4" Margin="15,0,15,12" Height="30">
+         Grid.Row="4" Margin="15,0,15,12" Height="30">
             CANCEL
         </Button>
         <TextBlock HorizontalAlignment="Left" Margin="10,6,0,5" TextWrapping="Wrap" Text="Chat with someone " VerticalAlignment="Center" Width="259" FontSize="14" Grid.ColumnSpan="3"/>

@@ -49,7 +49,7 @@
                 
                          Name="Btadd"
                          Click="Btadd_Click"
-                         ToolTip="MaterialDesignFlatButton"
+                       
                          Height="35" 
                          Background="{x:Null}" Margin="-4,-2,0,0" VerticalAlignment="Bottom" BorderBrush="#00000000" Width="100"
                             >

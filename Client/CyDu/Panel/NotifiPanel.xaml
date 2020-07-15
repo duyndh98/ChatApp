@@ -57,7 +57,7 @@
                                         Style="{StaticResource MaterialDesignOutlinedButton}"
                                         Width="100"
                                         Foreground="Red"
-                                        ToolTip="Resource name: MaterialDesignRaisedButton" Height="25" 
+                                        Height="25" 
                                             BorderBrush="Red">
                                             Deny
                                         </Button>
@@ -69,7 +69,7 @@
                                         Width="100"
                                             BorderBrush="Green"
                                             Foreground="Green"
-                                        ToolTip="Resource name: MaterialDesignRaisedButton" Height="25">
+                                        Height="25">
                                             Accecpt
                                         </Button>
                                     </StackPanel>

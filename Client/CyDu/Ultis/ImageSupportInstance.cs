@@ -37,7 +37,7 @@ namespace CyDu.Ultis
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
-            openFileDialog.Filter = "Image file (*.png)|*png";
+            openFileDialog.Filter = "PNG file (*.png)|*png|JPG file (*.jpg)|*jpg";
             if (openFileDialog.ShowDialog() == true)
             {
                 return (openFileDialog.FileNames[0]);

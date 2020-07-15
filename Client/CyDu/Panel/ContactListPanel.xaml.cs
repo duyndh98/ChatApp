@@ -79,18 +79,26 @@ namespace CyDu.Windown
             List<Contact> contactList = new List<Contact>();
             ObservableCollection<ContactListItem> contactItems = new ObservableCollection<ContactListItem>();
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(Ultils.url);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Contacts", HttpCompletionOption.ResponseContentRead).Result;
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    contactList = response.Content.ReadAsAsync<List<Contact>>().Result;
+                    client.BaseAddress = new Uri(Ultils.url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Contacts", HttpCompletionOption.ResponseContentRead).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        contactList = response.Content.ReadAsAsync<List<Contact>>().Result;
+                    }
                 }
             }
+            catch(Exception ee)
+            {
+
+            }
+         
 
             foreach (Contact contact in contactList)
             {

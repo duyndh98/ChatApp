@@ -24,5 +24,13 @@
         <Canvas x:Name="chattingpanel" Width="675" Height="636" Canvas.Left="705">
 
         </Canvas>
+        <Button Name="ShareScreenBt" Click="ShareScreenBt_Click" Content=" Share Screen" Canvas.Left="216" Canvas.Top="484" Width="128"
+                Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="#FF0068FF"
+                >
+        </Button>
+        <Button Name="ShareButtonBt"  Click="ShareButtonBt_Click" Content=" Share Camera" Canvas.Left="349" Canvas.Top="484" Width="128"
+                Style="{StaticResource MaterialDesignOutlinedButton}" Foreground="#FF0068FF"
+                >
+        </Button>
     </Canvas>
 </Window>

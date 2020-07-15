@@ -92,19 +92,28 @@ namespace CyDu.Windown
             string url = Ultils.getUrl();
             List<Conversation> ConversationList = new List<Conversation>();
             ObservableCollection<ConversationsView> conversationsViewsList = new ObservableCollection<ConversationsView>();
-            using (HttpClient client = new HttpClient())
+
+            try
             {
-                client.BaseAddress = new Uri(url);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
-                HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Conversations", HttpCompletionOption.ResponseContentRead).Result;
-                ConversationList =  response.Content.ReadAsAsync<List<Conversation>>().Result;
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    AppInstance.getInstance().SetConversation(ConversationList);
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppInstance.getInstance().GetUser().Token);
+                    HttpResponseMessage response = client.GetAsync("/api/Users/Owner/Conversations", HttpCompletionOption.ResponseContentRead).Result;
+                    ConversationList = response.Content.ReadAsAsync<List<Conversation>>().Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        AppInstance.getInstance().SetConversation(ConversationList);
+                    }
                 }
             }
+            catch (Exception ee)
+            {
+
+            }
+           
 
             foreach (Conversation conver in ConversationList)
             {

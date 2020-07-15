@@ -30,14 +30,14 @@
             Click="confirmDialog_Click"
             Style="{StaticResource MaterialDesignRaisedDarkButton}"
             Width="100"
-            ToolTip="Resource name: MaterialDesignRaisedLightDarkButton" Grid.Column="1" Margin="29,22,27,23" Grid.Row="1">
+            Grid.Column="1" Margin="29,22,27,23" Grid.Row="1">
             _Confirm
         </Button>
         <Button
             x:Name="cancelDialog"
             Click="cancelDialog_Click"
             Style="{StaticResource MaterialDesignFlatButton}"
-            ToolTip="MaterialDesignFlatButton" Margin="23,22,10,23" Grid.Row="1">
+            Margin="23,22,10,23" Grid.Row="1">
             Cancel
         </Button>
     </Grid>

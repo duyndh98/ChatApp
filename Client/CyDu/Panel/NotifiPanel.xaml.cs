@@ -51,7 +51,7 @@ namespace CyDu.Panel
             Bgworker = new BackgroundWorker();
             Bgworker.DoWork += Bgworker_DoWork;
             Bgworker.RunWorkerCompleted += Bgworker_RunWorkerCompleted;
-            Bgworker.RunWorkerAsync(0);
+            Bgworker.RunWorkerAsync(110);
 
             SetupHubConnectionAsync();
 
@@ -195,7 +195,14 @@ namespace CyDu.Panel
                 HttpResponseMessage response = client.DeleteAsync("/api/Contacts/" + contact.FromUserId).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    Bgworker.RunWorkerAsync();
+                    try
+                    {
+                        Bgworker.RunWorkerAsync(100);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
                 else
                 {
@@ -218,7 +225,14 @@ namespace CyDu.Panel
                 HttpResponseMessage response = client.PutAsJsonAsync("/api/Contacts/" + contact.FromUserId, new Contact() { Status = 1 }).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    Bgworker.RunWorkerAsync();
+                    try
+                    {
+                        Bgworker.RunWorkerAsync(100);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
                 else
                 {

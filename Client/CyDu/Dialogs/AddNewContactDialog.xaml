@@ -31,7 +31,7 @@
             Click="btOk_Click"
             Style="{StaticResource MaterialDesignRaisedButton}"
             Width="100"
-            ToolTip="Resource name: MaterialDesignRaisedLightButton" Grid.Column="1" Margin="23,10,23,12" Grid.Row="3" RenderTransformOrigin="0.94,0.406" Height="Auto">
+             Grid.Column="1" Margin="23,10,23,12" Grid.Row="3" RenderTransformOrigin="0.94,0.406" Height="Auto">
             OK
         </Button>
 
@@ -40,7 +40,7 @@
         Name="btcancel"
         Click= "btcancel_Click"
         Style="{StaticResource MaterialDesignFlatButton}"
-        ToolTip="MaterialDesignFlatButton"  Grid.Row="3" Margin="15,10,15,12" Height="Auto">
+          Grid.Row="3" Margin="15,10,15,12" Height="Auto">
             CANCEL
         </Button>
         <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Add new user " VerticalAlignment="Center" Width="259" FontSize="14" Grid.ColumnSpan="2"/>
