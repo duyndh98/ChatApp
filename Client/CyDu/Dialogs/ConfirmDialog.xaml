@@ -1,0 +1,44 @@
+﻿<Window x:Class="CyDu.Dialogs.ConfirmDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CyDu.Dialogs"
+        mc:Ignorable="d"
+        Title="ConfirmOutConversationDialog" Height="210.125" Width="320"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+        WindowStartupLocation="CenterScreen"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Name="textDialog" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="23,28,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="279" FontSize="16"/>
+        <Button
+            x:Name="confirmDialog"
+            Click="confirmDialog_Click"
+            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+            Width="100"
+            Grid.Column="1" Margin="29,22,27,23" Grid.Row="1">
+            _Confirm
+        </Button>
+        <Button
+            x:Name="cancelDialog"
+            Click="cancelDialog_Click"
+            Style="{StaticResource MaterialDesignFlatButton}"
+            Margin="23,22,10,23" Grid.Row="1">
+            Cancel
+        </Button>
+    </Grid>
+</Window>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:CyDu.Windown" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        x:Class="CyDu.Windown.AdminWindown" 
+        mc:Ignorable="d" d:DesignHeight="675" 
+        d:DesignWidth="400" 
+        Width="600"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}" 
+        TextElement.FontWeight="Regular" 
+        TextElement.FontSize="13" 
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto" 
+        ResizeMode="NoResize" IsTabStop="True"
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        
+        Title="Admin">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled">
+            <ListView x:Name="lvAdmin" ItemsSource="{Binding Items}" >
+                <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Code" Width="80" />
+                        <GridViewColumn Width="150" DisplayMemberBinding="{Binding Name}" Header="Name" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Fullname}" Header="Fullname" Width="200" />
+                        <GridViewColumn Width="80" Header="isAdmin">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" ToolTip="Approve as Admin" IsChecked="{Binding isAdmin}">
+                                        <materialDesign:PackIcon Kind="AccountKeyOutline" Height="21" Width="21" />
+                                    </ToggleButton>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
+        <Button Name="savebt" Click="savebt_Click"   Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignRaisedButton}"  Padding="0" Margin="40,25" Height="Auto">SAVE</Button>
+        <Button
+            x:Name="btCancel"
+            Click="btCancel_Click"
+            Grid.Column="0" Grid.Row="1"
+            Style="{StaticResource MaterialDesignFlatButton}"
+             Margin="40,25" Height="Auto"> 
+            CLOSE
+        </Button>
+    </Grid>
+</Window>

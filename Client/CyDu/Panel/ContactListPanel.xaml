@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="CyDu.Windown.ContactListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CyDu.Windown"
+             mc:Ignorable="d" 
+             d:DesignHeight="483" d:DesignWidth="330"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             >
+    <materialDesign:Card
+    materialDesign:ShadowAssist.ShadowDepth="Depth2" Background="#F0F4F8"
+    >
+        <DockPanel>
+            <StackPanel Margin="0,0,0,10">
+                <Grid  Width="auto" Height="50" >
+                    <Grid.ColumnDefinitions  >
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Border  Grid.Column="1"  CornerRadius="15" BorderBrush="Gray" Background="White" BorderThickness="2" DockPanel.Dock="Top" Height="40" Margin="27,5,8,5" >
+                        <Button
+                
+                         Name="Btadd"
+                         Click="Btadd_Click"
+                         ToolTip="MaterialDesignFlatButton"
+                         Height="35" 
+                         Background="{x:Null}" Margin="0,0,5,0" VerticalAlignment="Bottom" BorderBrush="#00000000" HorizontalAlignment="Right" Width="119"
+                            >
+                            <WrapPanel>
+                                <materialDesign:PackIcon Kind="Plus"  Width="auto" Height="auto" Foreground="#DD263CCB" />
+                                <Label Content="Contact" HorizontalAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" Foreground="#DD2300FF" />
+                            </WrapPanel>
+                        </Button>
+                    </Border>
+
+
+                </Grid>
+
+
+                <ScrollViewer Height="414">
+                    <ListView x:Name="lvContact" Width="335" Height="auto"  Background="White"
+                               PreviewMouseLeftButtonUp="lvContact_PreviewMouseLeftButtonUp"
+                              >
+                        <ScrollViewer.CanContentScroll>True</ScrollViewer.CanContentScroll>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,2,2,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image Name="ico" Grid.Column="0" Grid.RowSpan="2" Width="50" Height="50"
+                                   Source="{Binding Avatar}"
+                                   />
+                                    <TextBlock x:Name="Username" 
+                                   Text="{Binding Username}"
+                                   Grid.Column="1"
+                                   Grid.Row="0"
+                                   VerticalAlignment="Center"
+                                   Width="auto"
+                                   Height="auto" 
+                                   Background="{x:Null}" 
+                                   Foreground="#DD000000" FontWeight="Normal" FontSize="16"
+                              >
+                                    </TextBlock>
+
+
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+              
+                    </ListView>
+                </ScrollViewer>
+
+            </StackPanel>
+
+        </DockPanel>
+    </materialDesign:Card>
+
+</UserControl>
+
+
+
+
+                
